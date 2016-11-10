@@ -24,4 +24,15 @@ public class Person
 * Annotations to define complex JMX data types.
 
 ## Documentation
-* [Documentation](http://axonivy.github.io/ivymx)
+* [Getting Started](http://axonivy.github.io/ivymx/GettingStarted.html)
+* [JavaDoc](http://axonivy.github.io/ivymx/apidocs/index.html)
+
+## Maven
+
+```xml
+<dependency>
+  <groupId>com.axonivy</groupId>
+  <artifactId>ivymx</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
