@@ -1,0 +1,32 @@
+<project name="AXON IVY AG - Management">
+	<body>
+	    <menu name="Documentation">
+			<item name="Getting Started" href="GettingStarted.html">
+      			<item name="Register a MBean" href="GettingStarted.html#Register_a_MBean" />
+      			<item name="Adding attributes" href="GettingStarted.html#Adding_Attributes" />
+      			<item name="Writable attributes" href="GettingStarted.html#Writable_Attributes"/>
+      			<item name="Adding operations" href="GettingStarted.html#Adding_Operations"/>
+      			<item name="EL like expressions" href="GettingStarted.html#EL_Like_Expressions"/>
+      			<item name="Enhanced Example" href="GettingStarted.html#Enhanced_Example"/>
+      		</item>
+      		<item name="Javadoc" href="apidocs/index.html"/>
+    	</menu>
+    	<menu ref="reports"/>
+	</body>
+	
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+    <version>1.4</version>
+  </skin>
+  
+  <custom>
+	<fluidoSkin>
+		<gitHub>
+			<projectId>axonivy/management</projectId>
+			<ribbonOrientation>right</ribbonOrientation>
+			<ribbonColor>black</ribbonColor>
+		</gitHub>
+	</fluidoSkin>
+  </custom>
+</project>

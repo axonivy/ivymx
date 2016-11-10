@@ -1,0 +1,13 @@
+# Eclipse
+.settings/
+bin/
+
+# Java
+.class
+
+# Mac
+.DS_Store
+
+# Maven
+/log/
+target/

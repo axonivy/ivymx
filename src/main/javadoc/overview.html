@@ -1,0 +1,21 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+  <HEAD>
+    <TITLE>API Overview</TITLE>
+  </HEAD>
+  <BODY>
+    Annotations and utility classes to register POJO's as JMX {@link com.axonivy.jmx.MBean MBeans}. To start have a look at the class {@link com.axonivy.jmx.MBeans} and the annotation {@link com.axonivy.jmx.MBean}.
+    <p>Simple Example:</p>
+ 	<PRE>
+ {@code @MBean}("GettingStarted:name=Person")
+ public class Person
+ {
+   public static void main(String[] args)
+   {
+     Person person = new Person();
+     MBeans.registerMBeanFor(person);
+   }
+ }
+    </PRE>
+  </BODY>
+</HTML>
