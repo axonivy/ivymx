@@ -50,10 +50,6 @@
 					<name>Maven Central Snapshots Repo</name>
 					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 				</snapshotRepository>
-  				<repository>
-    				<id>ossrh</id>
-    				<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-  				</repository>				
 			</distributionManagement>
 		</profile>
 		<profile>
@@ -66,7 +62,7 @@
 		    	    	<version>2.5.3</version>
 		        		<configuration>
 							<tagNameFormat>v@{project.version}</tagNameFormat>
-							<releaseProfiles>release,central</releaseProfiles>
+							<releaseProfiles>release</releaseProfiles>
 							<goals>deploy site-deploy</goals>
 		        		</configuration>	        	
 					</plugin>
@@ -153,6 +149,17 @@
 					<merge>true</merge>
 				</configuration>
 			</plugin>
+		    <plugin>
+        		<groupId>org.sonatype.plugins</groupId>
+        		<artifactId>nexus-staging-maven-plugin</artifactId>
+        		<version>1.6.6</version>
+        		<extensions>true</extensions>
+        		<configuration>
+          			<serverId>ossrh</serverId>
+          			<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          			<autoReleaseAfterClose>true</autoReleaseAfterClose>
+		        </configuration>
+      		</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
