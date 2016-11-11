@@ -2,7 +2,45 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.axonivy</groupId>
 	<artifactId>ivymx</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>IVYMX - AXON IVY Java Management Extension</name>
+	<description>Annotations and utility classes to register POJO's as JMX MBeans.</description>
+	<url>https://github.com/axonivy/ivymx</url>
+	<organization>
+		<name>AXON IVY AG</name>
+		<url>http://www.axonivy.com</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>rwei</id>
+			<name>Reto Weiss</name>
+			<email>reto.weiss@axonivy.com</email>
+			<organization>AXON IVY AG</organization>
+			<organizationUrl>http://www.axonivy.com</organizationUrl>
+		</developer>
+		<developer>
+			<id>fs</id>
+			<name>Flavio Sadeghi</name>
+			<email>flavio.sadeghi@axonivy.com</email>
+			<organization>AXON IVY AG</organization>
+			<organizationUrl>http://www.axonivy.com</organizationUrl>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>git@github.com:axonivy/ivymx.git</url>
+		<connection>scm:git:git@github.com:axonivy/ivymx.git</connection>
+		<developerConnection>scm:git:git@github.com:axonivy/ivymx.git</developerConnection>
+    	<tag>HEAD</tag>
+	</scm>
 	<profiles>
 		<profile>
 			<id>central</id>
@@ -12,6 +50,10 @@
 					<name>Maven Central Snapshots Repo</name>
 					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 				</snapshotRepository>
+  				<repository>
+    				<id>ossrh</id>
+    				<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  				</repository>				
 			</distributionManagement>
 		</profile>
 		<profile>
@@ -24,7 +66,7 @@
 		    	    	<version>2.5.3</version>
 		        		<configuration>
 							<tagNameFormat>v@{project.version}</tagNameFormat>
-							<releaseProfiles>release</releaseProfiles>
+							<releaseProfiles>release,central</releaseProfiles>
 							<goals>deploy site-deploy</goals>
 		        		</configuration>	        	
 					</plugin>
@@ -45,6 +87,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -190,44 +233,6 @@
 		</dependency>
 
 	</dependencies>
-	<name>IVYMX - AXON IVY Java Management Extension</name>
-	<description>Annotations and utility classes to register POJO's as JMX MBeans.</description>
-	<organization>
-		<name>AXON IVY AG</name>
-		<url>http://www.axonivy.com</url>
-	</organization>
-	<developers>
-		<developer>
-			<id>rwei</id>
-			<name>Reto Weiss</name>
-			<email>reto.weiss@axonivy.com</email>
-			<organization>AXON IVY AG</organization>
-			<organizationUrl>http://www.axonivy.com</organizationUrl>
-		</developer>
-		<developer>
-			<id>fs</id>
-			<name>Flavio Sadeghi</name>
-			<email>flavio.sadeghi@axonivy.com</email>
-			<organization>AXON IVY AG</organization>
-			<organizationUrl>http://www.axonivy.com</organizationUrl>
-		</developer>
-	</developers>
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-			<comments>A business-friendly OSS license</comments>
-		</license>
-	</licenses>
-
-	<scm>
-		<url>git@github.com:axonivy/ivymx.git</url>
-		<connection>scm:git:git@github.com:axonivy/ivymx.git</connection>
-		<developerConnection>scm:git:git@github.com:axonivy/ivymx.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-	<url>https://github.com/axonivy/ivymx</url>
 	<distributionManagement>
 		<snapshotRepository>
 			<id>zugpronexus.snapshots</id>
