@@ -38,8 +38,8 @@ import com.axonivy.jmx.MException;
  *   }
  * }
  * -----
- * Instruction.parseInstruction(manager, MyBean.class "Hello #{name}").execute(new MyBean()) -> "Hello Reto"
- * Instruction.parseInstruction(manager, MyBean.class "Hello #{application.description}").execute(new MyBean()) -> "Hello Weiss"
+ * Instruction.parseInstruction(manager, MyBean.class, "Hello #{name}").execute(new MyBean()) -> "Hello Reto"
+ * Instruction.parseInstruction(manager, MyBean.class, "Hello #{application.description}").execute(new MyBean()) -> "Hello Weiss"
  * </pre>
  *
  *

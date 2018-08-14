@@ -19,7 +19,7 @@ class MBeanType
   private MBeanManager manager;
   private Class<?> mBeanClass;
   private Instruction descriptionInstruction;
-  private Instruction nameInstruction;
+  private NameInstruction nameInstruction;
   private List<MCompositionReferenceInfo> compositionReferenceInfos;
   
   MBeanType(MBeanManager manager, Class<?> mBeanClass)
@@ -53,7 +53,7 @@ class MBeanType
   {
     if (nameInstruction == null)
     {
-      nameInstruction = Instruction.parseInstruction(manager, mBeanClass, annotation.value());
+      nameInstruction = NameInstruction.parseInstruction(manager, mBeanClass, annotation.value());
     }
     return nameInstruction.execute(mBean);
   }
