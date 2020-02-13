@@ -22,6 +22,7 @@ public class Person
 * Use EL like expressions to name and describe your MBeans. 
 * Automatically register your MBeans if they are added to a collection.
 * Annotations to define complex JMX data types.
+* Cache attribute values 
 
 ## Documentation
 * [Getting Started](http://axonivy.github.io/ivymx/GettingStarted.html)
