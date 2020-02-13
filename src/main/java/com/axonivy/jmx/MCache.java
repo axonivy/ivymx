@@ -11,13 +11,13 @@ import java.util.concurrent.TimeUnit;
  * Caches the value of an attribute computed by a method for the given amount of time. 
  * Instead of calling the method again the cached value is returned until the cache times out.<br>
  * Example:
- * <code><pre>
+ * <pre><code>
  * {@literal @MCache(10)}
  * {@literal @MAttribute}
  * public int compute()
  * {
  * }
- * </pre></code>
+ * </code></pre>
  * You can poll the attribute as fast as you can but the method <code>compute()</code> is only executed once every 10 seconds. 
  * This also means that the value of the attribute is only updated every 10 seconds.
  * Use this annotation if the computation of the attribute last long or is a heavy operation (e.g. database call, etc.)  
@@ -31,11 +31,13 @@ public @interface MCache {
   /** 
    * The amount of time the cached value is used until it is computed again.
    * If {@link #unit()} is not specified the timeout is interpreted as {@link TimeUnit#SECONDS seconds}
+   * @return time after which the cache timeouts
    */
   int timeout();
   
   /** 
-   * The unit in which {@link #timeout()} is interpreted 
+   * The unit in which {@link #timeout()} is interpreted
+   * @return time unit of the timeout value 
    */
   TimeUnit unit() default TimeUnit.SECONDS;
 }
