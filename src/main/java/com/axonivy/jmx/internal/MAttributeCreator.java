@@ -14,6 +14,7 @@ import javax.management.openmbean.OpenType;
 import javax.management.openmbean.SimpleType;
 
 import com.axonivy.jmx.MAttribute;
+import com.axonivy.jmx.MCache;
 import com.axonivy.jmx.MInclude;
 import com.axonivy.jmx.MSizeAttribute;
 
@@ -180,15 +181,21 @@ class MAttributeCreator extends MCreator
   {
     Method setterMethod = null;
     Type managedTyped = MInternalUtils.getManagedTyped(getterMethod.getGenericReturnType(), attribute.type());
+    MethodBasedValueAccessor methodAccessor;
     if (mBeanInfo.isWritable())
     {
       setterMethod = evaluateSetMethod(getterMethod, mBeanInfo);
-      return new MethodBasedValueAccessor(manager, targetAccessor, manager.getValueConverter(managedTyped), getterMethod, setterMethod);
+      methodAccessor = new MethodBasedValueAccessor(manager, targetAccessor, manager.getValueConverter(managedTyped), getterMethod, setterMethod);
     }
     else
     {
-      return new MethodBasedValueAccessor(manager, targetAccessor, manager.getValueConverter(managedTyped), getterMethod);
+      methodAccessor = new MethodBasedValueAccessor(manager, targetAccessor, manager.getValueConverter(managedTyped), getterMethod);
     }
+    if (getterMethod.isAnnotationPresent(MCache.class))
+    {
+      return new CachedValueAccessor(methodAccessor, getterMethod.getAnnotation(MCache.class));  
+    }
+    return methodAccessor;
   }
 
   private static Method evaluateSetMethod(Method getterMethod, OpenMBeanAttributeInfo mBeanInfo)
