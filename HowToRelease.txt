@@ -1,0 +1,7 @@
+Infrastructure:
+1. Install SSH Keys so that you have write access to the GitHub repository of 
+2. Install the code signing certificate primary and public key that is needed to sign the code
+
+Release:
+> mvn release:prepare
+> mvn release:perform
