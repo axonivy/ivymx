@@ -109,6 +109,7 @@
 					</execution>
 				</executions>
 			</plugin>
+      
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
@@ -124,10 +125,12 @@
 							<!-- Axon.ivy Project Build Publisher -->
 							<keyname>72B12346</keyname>
 							<!--  <passphraseServerId>gpg.passphrase</passphraseServerId>-->
+              <skip>true</skip> <!-- REENABLE -->
 						</configuration>
 					</execution>
 				</executions>
     		</plugin>
+
 			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
@@ -206,7 +209,7 @@
 		<dependency>
 			<groupId>org.jmockit</groupId>
 			<artifactId>jmockit</artifactId>
-			<version>1.14</version>
+			<version>1.48</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -238,13 +241,5 @@
 			<version>1.7.21</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>zugpronexus.snapshots</id>
-		    <name>Internal Plugin Snapshot Repository</name>
-			<url>http://zugpronexus:8081/nexus/content/repositories/build-plugin-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>

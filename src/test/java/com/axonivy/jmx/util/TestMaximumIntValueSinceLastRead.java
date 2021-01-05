@@ -4,23 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.management.MBeanAttributeInfo;
 
-import mockit.Deencapsulation;
-
 import org.junit.Test;
 
 import com.axonivy.jmx.BaseMTest;
 import com.axonivy.jmx.MBean;
 import com.axonivy.jmx.MInclude;
-import com.axonivy.jmx.util.MaximumIntValueSinceLastRead;
 
 /**
  * Test class {@link MaximumIntValueSinceLastRead}
  */
 public class TestMaximumIntValueSinceLastRead extends BaseMTest<TestMaximumIntValueSinceLastRead.TestBean>
 {
-  private static final long FIFTEEN_MINUTES = 15L*60L*1000L*1000L*1000L;
-  private static final long FIVE_MINUTES = 5L*60L*1000L*1000L*1000L;
-
   @MBean(value="Test:type=TestType")
   public static class TestBean
   {
@@ -72,23 +66,4 @@ public class TestMaximumIntValueSinceLastRead extends BaseMTest<TestMaximumIntVa
     assertThat(getAttribute("maxValue")).isEqualTo(20);
     assertThat(getAttribute("maxValue")).isEqualTo(20);
   }
-
-  @Test 
-  public void testInvalidMaximumValue() throws Exception
-  {
-    assertThat(getAttribute("maxValue")).isEqualTo(0);
-    
-    testBean.maxValue.addValue(100);
-    testBean.maxValue.addValue(10);
-    Deencapsulation.setField(testBean.maxValue, System.nanoTime()-FIFTEEN_MINUTES);
-    
-    assertThat(getAttribute("maxValue")).isEqualTo(10);        
-    
-    testBean.maxValue.addValue(20);
-    testBean.maxValue.addValue(10);
-    Deencapsulation.setField(testBean.maxValue, System.nanoTime()-FIVE_MINUTES);
-    
-    assertThat(getAttribute("maxValue")).isEqualTo(20);
-  }
-
 }
