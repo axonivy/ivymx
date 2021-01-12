@@ -2,36 +2,27 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.axonivy</groupId>
 	<artifactId>ivymx</artifactId>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
+
 	<name>IVYMX - AXON IVY Java Management Extension</name>
 	<description>Annotations and utility classes to register POJO's as JMX MBeans.</description>
 	<url>https://github.com/axonivy/ivymx</url>
 	<organization>
-		<name>AXON IVY AG</name>
-		<url>http://www.axonivy.com</url>
+		<name>AXON Ivy AG</name>
+		<url>https://www.axonivy.com</url>
 	</organization>
 	<developers>
 		<developer>
-			<id>rwei</id>
-			<name>Reto Weiss</name>
-			<email>reto.weiss@axonivy.com</email>
-			<organization>AXON IVY AG</organization>
-			<organizationUrl>http://www.axonivy.com</organizationUrl>
-		</developer>
-		<developer>
-			<id>fs</id>
-			<name>Flavio Sadeghi</name>
-			<email>flavio.sadeghi@axonivy.com</email>
-			<organization>AXON IVY AG</organization>
-			<organizationUrl>http://www.axonivy.com</organizationUrl>
+			<name>IvyTeam</name>
+			<email>support@ivyteam.ch</email>
+			<organization>AXON Ivy AG</organization>
+			<organizationUrl>https://www.axonivy.com</organizationUrl>
 		</developer>
 	</developers>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
 			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
 
@@ -39,167 +30,55 @@
 		<url>git@github.com:axonivy/ivymx.git</url>
 		<connection>scm:git:git@github.com:axonivy/ivymx.git</connection>
 		<developerConnection>scm:git:git@github.com:axonivy/ivymx.git</developerConnection>
-    	<tag>HEAD</tag>
 	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<revision>0-SNAPSHOT</revision>
+		<skip.gpg>true</skip.gpg>
+	</properties>
+
 	<profiles>
 		<profile>
-			<id>central</id>
+			<id>sonatype.snapshots</id>
 			<distributionManagement>
 				<snapshotRepository>
-					<id>ossrh</id>
+					<id>sonatype.snapshots</id>
 					<name>Maven Central Snapshots Repo</name>
 					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 				</snapshotRepository>
 			</distributionManagement>
 		</profile>
 		<profile>
-			<id>release</id>
+			<id>maven.central.release</id>
+			<properties>
+				<skip.gpg>false</skip.gpg>
+			</properties>
+			<distributionManagement>
+				<repository>
+					<id>sonatype.releases</id>
+					<name>Sonatype Releases Repo</name>
+					<url>https://oss.sonatype.org/content/repositories/releases/</url>
+				</repository>
+			</distributionManagement>
 			<build>
 				<plugins>
-			       	<plugin>
-			        	<groupId>org.apache.maven.plugins</groupId>
-			        	<artifactId>maven-release-plugin</artifactId>
-		    	    	<version>2.5.3</version>
-		        		<configuration>
-							<tagNameFormat>v@{project.version}</tagNameFormat>
-							<releaseProfiles>release</releaseProfiles>
-							<goals>deploy site-deploy</goals>
-		        		</configuration>	        	
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>sonatype.releases</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
-		</profile>				
+		</profile>
 	</profiles>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
-				<configuration>
-					<excludePackageNames>com.axonivy.jmx.internal</excludePackageNames>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-      
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-						<configuration>
-							<!-- Axon.ivy Project Build Publisher -->
-							<keyname>72B12346</keyname>
-							<!--  <passphraseServerId>gpg.passphrase</passphraseServerId>-->
-              <skip>true</skip> <!-- REENABLE -->
-						</configuration>
-					</execution>
-				</executions>
-    		</plugin>
 
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<version>0.12</version>
-				<executions>
-					<execution>
-						<id>deploy.description.to.github</id>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>site-deploy</phase>
-						<configuration>
-							<message>update description</message>
-						</configuration>
-					</execution>
-				</executions>
-				<configuration>
-					<server>github</server>
-					<merge>true</merge>
-				</configuration>
-			</plugin>
-		    <plugin>
-        		<groupId>org.sonatype.plugins</groupId>
-        		<artifactId>nexus-staging-maven-plugin</artifactId>
-        		<version>1.6.6</version>
-        		<extensions>true</extensions>
-        		<configuration>
-          			<serverId>ossrh</serverId>
-          			<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-          			<autoReleaseAfterClose>true</autoReleaseAfterClose>
-		        </configuration>
-      		</plugin>
-		</plugins>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-site-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>default-deploy</id><!-- use github pages instead! -->
-							<configuration>
-								<skipDeploy>true</skipDeploy>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
-				<configuration>
-					<excludePackageNames>com.axonivy.jmx.internal</excludePackageNames>
-				</configuration>
-			    <reportSets>
-          			<reportSet>
-            			<id>default</id>
-            			<reports>
-              				<report>javadoc</report>
-			            </reports>
-          			</reportSet>
-          		</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -242,4 +121,112 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<release>11</release>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<excludePackageNames>com.axonivy.jmx.internal</excludePackageNames>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<!-- Axon.ivy Project Build Publisher -->
+							<keyname>053E301A05B98CBE</keyname>
+							<gpgArguments>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
+							<skip>${skip.gpg}</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.12</version>
+				<executions>
+					<execution>
+						<id>deploy.description.to.github</id>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>site-deploy</phase>
+						<configuration>
+							<message>update description</message>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<server>github</server>
+					<merge>true</merge>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
+				<configuration>
+					<excludePackageNames>com.axonivy.jmx.internal</excludePackageNames>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>default</id>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
