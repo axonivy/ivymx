@@ -34,7 +34,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<revision>0-SNAPSHOT</revision>
+		<revision>1-SNAPSHOT</revision>
 		<skip.gpg>true</skip.gpg>
 		<log4j.version>2.13.3</log4j.version>
 		<slf4j.version>1.7.30</slf4j.version>
