@@ -20,17 +20,19 @@ import javax.management.openmbean.OpenMBeanAttributeInfo;
 import javax.management.openmbean.OpenType;
 import javax.management.openmbean.SimpleType;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MBeans;
-import com.axonivy.jmx.MComposite;
-import com.axonivy.jmx.MItem;
 import com.axonivy.jmx.TestMBeans.BaseTestBean;
+import com.axonivy.jmx.internal.LogErrorStrategy;
+import com.axonivy.jmx.util.LogTestAppender;
 
 public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAttribute.TestBean>
 {
+  private final LogTestAppender logAppender = new LogTestAppender(Level.ERROR);
   
   public TestCompositeDataMAttribute() throws MalformedObjectNameException
   {
@@ -84,6 +86,22 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
   { 
     @MItem 
     private RecursiveComposite recursiveItem;
+  }
+  
+  @Before
+  @Override
+  public void before()
+  {
+    super.before();
+    Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
+  }
+  
+  @After
+  @Override
+  public void after()
+  {
+    super.after();
+    Logger.getLogger(LogErrorStrategy.class).removeAppender(logAppender);
   }
 
   @Test
@@ -228,12 +246,14 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
     assertThat(item2.get("startDate")).isEqualTo(testDate);
   }
   
-  @Test(expected=StackOverflowError.class)
+  @Test
   public void testRecursiveCompositeClass()
   {
+    assertThat(logAppender.getRecording()).isEmpty();
     MBeans.registerMBeanFor(new TestBean2());
+    assertThat(logAppender.getRecording()).contains("Could not register MBean 'com.axonivy.jmx.TestCompositeDataMAttribute$TestBean");
+    assertThat(logAppender.getRecording()).contains("java.lang.StackOverflowError");
   }
-
   
   private CompositeType getCompositeTypeForCompositeData2() throws IntrospectionException, InstanceNotFoundException, ReflectionException
   {

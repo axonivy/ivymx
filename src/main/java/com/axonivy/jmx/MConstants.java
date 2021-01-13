@@ -13,5 +13,5 @@ public class MConstants
   /** Ignores all registration errors */
   public static final IRegisterMBeanErrorStrategy IGNORE_ERROR_STRATEGY = IgnoreErrorStrategy.INSTANCE;
   /** This strategy is set by default */
-  public static final IRegisterMBeanErrorStrategy DEFAULT_ERROR_STRATEGY = THROW_RUNTIME_EXCEPTION_ERROR_STRATEGY;
+  public static final IRegisterMBeanErrorStrategy DEFAULT_ERROR_STRATEGY = LOG_ERROR_STRATEGY;
 }

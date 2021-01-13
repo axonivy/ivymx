@@ -12,11 +12,20 @@ import javax.management.MBeanException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ReflectionException;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import com.axonivy.jmx.internal.LogErrorStrategy;
+import com.axonivy.jmx.util.LogTestAppender;
 
 
 public class TestMethodBasedMAttribute extends BaseMTest<TestMethodBasedMAttribute.TestBean>
 {
+  private final LogTestAppender logAppender = new LogTestAppender(Level.ERROR);
+
   @MBean("Test:type=TestType")
   public static class TestBean
   {
@@ -89,6 +98,22 @@ public class TestMethodBasedMAttribute extends BaseMTest<TestMethodBasedMAttribu
     {
       return true;
     }
+  }
+  
+  @Before
+  @Override
+  public void before()
+  {
+    super.before();
+    Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
+  }
+  
+  @After
+  @Override
+  public void after()
+  {
+    super.after();
+    Logger.getLogger(LogErrorStrategy.class).removeAppender(logAppender);
   }
 
   public TestMethodBasedMAttribute() throws MalformedObjectNameException
@@ -209,29 +234,17 @@ public class TestMethodBasedMAttribute extends BaseMTest<TestMethodBasedMAttribu
   @Test
   public void testNoGetterForAttribute() throws Exception 
   {
-    try
-    {
-      MBeans.registerMBeanFor(new NoGetterForAttribute());
-      fail("Should throw exception");
-    }
-    
-    catch(Exception ex)
-    {
-      assertThat(ex.getCause().getCause().getMessage()).isEqualTo("Name of getter method for an attribute must start with get...() or is...() but is 'doThis'");
-    }    
+    assertThat(logAppender.getRecording()).isEmpty();
+    MBeans.registerMBeanFor(new NoGetterForAttribute());
+    assertThat(logAppender.getRecording()).contains("Name of getter method for an attribute must start with get...() or is...() but is 'doThis'");
   }
   
   @Test
   public void testNoSetterForAttribute() throws Exception
   {
-    try
-    {
-      MBeans.registerMBeanFor(new NoSetterForAttribute());
-      fail("Should throw exception");
-    }
-    catch(Exception ex)
-    {
-      assertThat(ex.getCause().getCause().getMessage()).isEqualTo("Method 'setThis(...)' must be available to set attribute 'this' on class 'com.axonivy.jmx.TestMethodBasedMAttribute$NoSetterForAttribute'");
-    }    
+    Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
+    assertThat(logAppender.getRecording()).isEmpty();
+    MBeans.registerMBeanFor(new NoSetterForAttribute());
+    assertThat(logAppender.getRecording()).contains("Method 'setThis(...)' must be available to set attribute 'this' on class 'com.axonivy.jmx.TestMethodBasedMAttribute$NoSetterForAttribute'");
   }
 }

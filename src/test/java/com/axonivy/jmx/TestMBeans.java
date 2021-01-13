@@ -1,25 +1,28 @@
 package com.axonivy.jmx;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Arrays;
 import java.util.List;
 
-import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
 import javax.management.ReflectionException;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MBeans;
+import com.axonivy.jmx.internal.LogErrorStrategy;
+import com.axonivy.jmx.util.LogTestAppender;
 
 public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
 {
+  private final LogTestAppender logAppender = new LogTestAppender(Level.ERROR);
+  
   public static class BaseTestBean
   {
     @SuppressWarnings("unused")
@@ -97,15 +100,7 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
   @Test
   public void testRegisterSameNameTwice()
   {
-    try
-    {
-      MBeans.registerMBeanFor(new TestBean());
-      fail("Should throw exception");
-    }
-    catch(Exception ex)
-    {
-      assertThat(ex.getCause()).isInstanceOf(InstanceAlreadyExistsException.class);
-    }
+    MBeans.registerMBeanFor(new TestBean());
   }
 
   @Test
@@ -154,13 +149,7 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
   public void testUnregister()
   {
     MBeans.unregisterMBeanFor(testBean);
-    try
-    {
-      getTestBeanFromBeanServer();
-      fail("Should throw InstanceNotFoundException");
-    }
-    catch(InstanceNotFoundException ex)
-    {}
+    assertThatThrownBy(() -> getTestBeanFromBeanServer()).isInstanceOf(InstanceNotFoundException.class);
   }
 
   @Test
@@ -187,13 +176,9 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
   @Test
   public void testRegisterNotMBean()
   {
-    try
-    {
-      MBeans.registerMBeanFor(new Object());
-    }
-    catch(Exception ex)
-    {
-      assertThat(ex.getMessage()).isEqualTo("Bean 'class java.lang.Object' must contain a @MBean annotation");
-    }
+    Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
+    assertThat(logAppender.getRecording()).isEmpty();
+    MBeans.registerMBeanFor(new Object());
+    assertThat(logAppender.getRecording()).contains("Bean 'class java.lang.Object' must contain a @MBean annotation");
   }
 }
