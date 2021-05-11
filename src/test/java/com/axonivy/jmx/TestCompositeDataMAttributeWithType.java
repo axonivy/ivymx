@@ -21,10 +21,6 @@ import javax.management.openmbean.SimpleType;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MComposite;
-import com.axonivy.jmx.MItem;
 import com.axonivy.jmx.TestMBeans.BaseTestBean;
 
 public class TestCompositeDataMAttributeWithType extends BaseMTest<TestCompositeDataMAttributeWithType.TestBean>
@@ -42,7 +38,7 @@ public class TestCompositeDataMAttributeWithType extends BaseMTest<TestComposite
     private ICompData compositeData = new CompData();
     
     @MAttribute(type=CompData.class)
-    private List<ICompData> compositeDatas = new ArrayList<ICompData>();
+    private final List<ICompData> compositeDatas = new ArrayList<ICompData>();
     
     @MAttribute(type=CompData.class)
     private List<ICompData> getCompDatas()
@@ -51,7 +47,7 @@ public class TestCompositeDataMAttributeWithType extends BaseMTest<TestComposite
     }       
   }
 
-  public static interface ICompData
+  public interface ICompData
   {
     
   }
@@ -80,7 +76,7 @@ public class TestCompositeDataMAttributeWithType extends BaseMTest<TestComposite
     }
   }
   
-  public static interface ICompData2
+  public interface ICompData2
   {
     
   }

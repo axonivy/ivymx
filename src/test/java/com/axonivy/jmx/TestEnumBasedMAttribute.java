@@ -13,8 +13,6 @@ import javax.management.ReflectionException;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
 import com.axonivy.jmx.TestEnumBasedMAttribute.TestBean.TestEnum;
 
 public class TestEnumBasedMAttribute extends BaseMTest<TestEnumBasedMAttribute.TestBean>
@@ -22,7 +20,7 @@ public class TestEnumBasedMAttribute extends BaseMTest<TestEnumBasedMAttribute.T
   @MBean("Test:type=TestType")
   public static class TestBean
   {
-    public static enum TestEnum
+    public enum TestEnum
     {
       VALUE1,
       VALUE2

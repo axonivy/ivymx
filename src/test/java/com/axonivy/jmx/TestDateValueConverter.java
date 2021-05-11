@@ -9,23 +9,18 @@ import javax.management.openmbean.CompositeData;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MComposite;
-import com.axonivy.jmx.MItem;
-
 public class TestDateValueConverter extends BaseMTest<TestDateValueConverter.TestBean>
 {
   @MBean("Test:type=TestType")
   public static class TestBean
   {
     @MAttribute(isWritable=true)
-    private Date dateField = new java.sql.Date(0);
+    private final Date dateField = new java.sql.Date(0);
     
     private Date dateMethod = new java.sql.Date(1);
     
     @MAttribute
-    private TestComposite composite = new TestComposite();
+    private final TestComposite composite = new TestComposite();
     
     @MAttribute(isWritable=true)
     public Date getDateMethod()
@@ -43,9 +38,9 @@ public class TestDateValueConverter extends BaseMTest<TestDateValueConverter.Tes
   public static class TestComposite
   {
     @MItem
-    private Date dateField = new java.sql.Date(2);
+    private final Date dateField = new java.sql.Date(2);
     
-    private Date dateMethod = new java.sql.Date(3);
+    private final Date dateMethod = new java.sql.Date(3);
     
     @MItem
     public Date getDateMethod()

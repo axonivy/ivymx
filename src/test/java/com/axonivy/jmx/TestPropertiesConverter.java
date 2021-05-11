@@ -18,8 +18,6 @@ import javax.management.openmbean.TabularType;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
 import com.axonivy.jmx.util.MUtils;
 
 public class TestPropertiesConverter extends BaseMTest<TestPropertiesConverter.TestBean>
@@ -28,7 +26,7 @@ public class TestPropertiesConverter extends BaseMTest<TestPropertiesConverter.T
   public static class TestBean
   {
     @MAttribute(isWritable=true)
-    private Properties field = new Properties();
+    private final Properties field = new Properties();
 
     public TestBean()
     {

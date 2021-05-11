@@ -18,10 +18,6 @@ import javax.management.ReflectionException;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MBeans;
-
 public class TestFieldBasedMAttribute extends BaseMTest<TestFieldBasedMAttribute.TestBean>
 {
   public static class BaseTestBean

@@ -14,9 +14,6 @@ import javax.management.openmbean.CompositeData;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
-
 public class TestThrowableMAttribute extends BaseMTest<TestThrowableMAttribute.TestBean>
 {
   @MBean("Test:type=TestType")
