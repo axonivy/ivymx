@@ -11,16 +11,13 @@ import javax.management.ReflectionException;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MOperation;
 import com.axonivy.jmx.MOperation.Impact;
 
 public class TestMOperation extends BaseMTest<TestMOperation.TestBean>
 {
   public interface IBean
   {
-    @MOperation(description="Searches a sub string inside an other string", paramDescriptions={"String to search in", "String to search for"})
-    public int searchSubString(String string, String substring);
+    @MOperation(description="Searches a sub string inside an other string", paramDescriptions={"String to search in", "String to search for"}) int searchSubString(String string, String substring);
   }
   
   public static class BaseTestBean

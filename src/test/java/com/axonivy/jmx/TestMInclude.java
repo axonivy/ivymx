@@ -11,11 +11,6 @@ import javax.management.ReflectionException;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MInclude;
-import com.axonivy.jmx.MOperation;
-
 public class TestMInclude extends BaseMTest<TestMInclude.TestBean>
 {
 
@@ -23,9 +18,9 @@ public class TestMInclude extends BaseMTest<TestMInclude.TestBean>
   public static class TestBean 
   {
     @MInclude
-    private Application application = new Application();
+    private final Application application = new Application();
     
-    private Pmv myPmv = new Pmv();
+    private final Pmv myPmv = new Pmv();
     
     @MInclude
     public Pmv getPmv()

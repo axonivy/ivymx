@@ -7,17 +7,13 @@ import javax.management.ObjectInstance;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MBeans;
-import com.axonivy.jmx.MCompositionReference;
-
 
 public class TestMCompositionReference extends BaseMTest<TestMCompositionReference.TestBean>
 { 
   @MBean(value="Test:type=TestBean,name=#{name}")
   public static class TestBean
   {
-    private String name;
+    private final String name;
     
     @MCompositionReference
     private TestBean composition;
@@ -44,7 +40,7 @@ public class TestMCompositionReference extends BaseMTest<TestMCompositionReferen
   public static class TestConcatBean
   {
     @MCompositionReference(concatName=true)
-    private TestConcatBean2 concat = new TestConcatBean2();
+    private final TestConcatBean2 concat = new TestConcatBean2();
   }
 
   @MBean("sub=TestConcatBean2")

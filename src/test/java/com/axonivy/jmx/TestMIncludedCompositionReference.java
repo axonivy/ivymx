@@ -7,19 +7,14 @@ import javax.management.ObjectInstance;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MBeans;
-import com.axonivy.jmx.MCompositionReference;
-import com.axonivy.jmx.MInclude;
-
 public class TestMIncludedCompositionReference extends BaseMTest<TestMIncludedCompositionReference.TestBean>
 { 
   public static class TestBaseBean
   {
     @MInclude
-    private IncludeBean3 include3 = new IncludeBean3();
+    private final IncludeBean3 include3 = new IncludeBean3();
     
-    private IncludeBean4 includeBean4 = new IncludeBean4();
+    private final IncludeBean4 includeBean4 = new IncludeBean4();
     
     @MInclude 
     private IncludeBean4 getIncludeBean4()
@@ -32,15 +27,15 @@ public class TestMIncludedCompositionReference extends BaseMTest<TestMIncludedCo
   public static class TestBean extends TestBaseBean
   {
     @MInclude
-    private IncludeBean1 include = new IncludeBean1();
+    private final IncludeBean1 include = new IncludeBean1();
   }
   
   public static class IncludeBean1
   {
     @MCompositionReference()
-    private TestCompositionBean1 comp = new TestCompositionBean1();
+    private final TestCompositionBean1 comp = new TestCompositionBean1();
     
-    private IncludeBean2 includeBean2 = new IncludeBean2();
+    private final IncludeBean2 includeBean2 = new IncludeBean2();
     
     @MInclude 
     private IncludeBean2 getIncludeBean2()
@@ -51,7 +46,7 @@ public class TestMIncludedCompositionReference extends BaseMTest<TestMIncludedCo
 
   public static class IncludeBean2
   {
-    private TestCompositionBean2 comp = new TestCompositionBean2();
+    private final TestCompositionBean2 comp = new TestCompositionBean2();
     
     @MCompositionReference()
     private TestCompositionBean2 getComp()
@@ -63,12 +58,12 @@ public class TestMIncludedCompositionReference extends BaseMTest<TestMIncludedCo
   public static class IncludeBean3
   {
     @MCompositionReference()
-    private TestCompositionBean3 comp = new TestCompositionBean3();
+    private final TestCompositionBean3 comp = new TestCompositionBean3();
   }
 
   public static class IncludeBean4
   {
-    private TestCompositionBean4 comp = new TestCompositionBean4();
+    private final TestCompositionBean4 comp = new TestCompositionBean4();
     
     @MCompositionReference()
     private TestCompositionBean4 getComp()

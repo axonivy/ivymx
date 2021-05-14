@@ -16,9 +16,6 @@ import javax.management.ReflectionException;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
-
 public class TestUriConverter extends BaseMTest<TestUriConverter.TestBean>
 {
   private static URI TEST_URI2;

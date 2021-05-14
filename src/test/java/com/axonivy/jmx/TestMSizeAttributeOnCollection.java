@@ -15,8 +15,6 @@ import javax.management.ReflectionException;
 
 import org.junit.Test;
 
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MSizeAttribute;
 import com.axonivy.jmx.TestFieldBasedMAttribute.BaseTestBean;
 
 public class TestMSizeAttributeOnCollection extends BaseMTest<TestMSizeAttributeOnCollection.TestBean>

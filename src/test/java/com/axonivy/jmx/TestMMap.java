@@ -8,18 +8,15 @@ import javax.management.MalformedObjectNameException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MCollections;
-
 public class TestMMap extends BaseMTest<TestMMap.TestBean>
 {
-  private Map<String, TestBean> testMap = MCollections.managedMap(new HashMap<String, TestBean>());
+  private final Map<String, TestBean> testMap = MCollections.managedMap(new HashMap<String, TestBean>());
 
   @MBean(value="Test:type=TestType,id=#{id}")
   public static class TestBean
   {
     private static int global=0;
-    private int id = global++;
+    private final int id = global++;
     public String getId()
     {
       return ""+id;

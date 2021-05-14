@@ -14,10 +14,6 @@ import javax.management.ReflectionException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MBeans;
-
 public class TestMBeanBasedMAttribute extends BaseMTest<TestMBeanBasedMAttribute.TestBean>
 {
   @MBean("Test:type=TestType")
@@ -50,8 +46,8 @@ public class TestMBeanBasedMAttribute extends BaseMTest<TestMBeanBasedMAttribute
     String test = "Hello World";
   }
 
-  private EmbeddedBean embeddedBean = new EmbeddedBean();
-  private Object embeddedBeanName;
+  private final EmbeddedBean embeddedBean = new EmbeddedBean();
+  private final Object embeddedBeanName;
   
   public TestMBeanBasedMAttribute() throws MalformedObjectNameException
   {

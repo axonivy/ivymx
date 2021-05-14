@@ -14,10 +14,6 @@ import javax.management.ReflectionException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
-import com.axonivy.jmx.MAttribute;
-import com.axonivy.jmx.MBean;
-import com.axonivy.jmx.MInclude;
-import com.axonivy.jmx.MOperation;
 import com.axonivy.jmx.MOperation.Impact;
 
 public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElExpression.TestBean>
@@ -27,10 +23,10 @@ public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElEx
   public static class TestBean
   {
     @MInclude
-    private Counter errors = new Counter("errors");
+    private final Counter errors = new Counter("errors");
 
     @MInclude
-    private Counter requests = new Counter("requests");
+    private final Counter requests = new Counter("requests");
   }
 
   public static class Counter
@@ -38,7 +34,7 @@ public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElEx
     @MAttribute(name="#{name}", description="All #{name} that were occured")
     private int cnt=0;
 
-    private String name;
+    private final String name;
 
     public Counter(String name)
     {

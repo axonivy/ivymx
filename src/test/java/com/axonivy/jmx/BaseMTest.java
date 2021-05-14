@@ -16,13 +16,10 @@ import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
-import org.junit.Assert;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-
-import com.axonivy.jmx.MBeans;
 
 public class BaseMTest<T>
 {
