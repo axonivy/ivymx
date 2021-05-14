@@ -58,7 +58,7 @@ class MAttributeCreator extends MCreator
 
   private void addMethodBasedAttributesDeclaredOn(Class<?> clazz, List<DynamicMAttribute> attributes)
   {
-    for (Method method : clazz.getDeclaredMethods())
+    for (Method method : MInternalUtils.getNonSyntheticDeclaredMethods(clazz))
     {
       MAttribute attribute = method.getAnnotation(MAttribute.class);
       if (attribute != null)

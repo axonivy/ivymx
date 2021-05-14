@@ -48,7 +48,7 @@ class MCompositionReferenceCreator extends MCreator
 
   private void addMethodBasedCompositionReferenceInfosDeclaredOn(Class<?> clazz, List<MCompositionReferenceInfo> infos)
   {
-    for (Method method : clazz.getDeclaredMethods())
+    for (Method method : MInternalUtils.getNonSyntheticDeclaredMethods(clazz))
     {
       MCompositionReference annotation = method.getAnnotation(MCompositionReference.class);
       if (annotation != null)

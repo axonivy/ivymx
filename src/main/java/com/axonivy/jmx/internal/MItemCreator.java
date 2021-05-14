@@ -55,7 +55,7 @@ class MItemCreator extends MCreator
 
   private void addMethodItems(Class<?> clazz, Map<String, DynamicMItem> items)
   {
-    for (Method method : clazz.getDeclaredMethods())
+    for (Method method : MInternalUtils.getNonSyntheticDeclaredMethods(clazz))
     {
       MItem item = method.getAnnotation(MItem.class);
       if (item != null)

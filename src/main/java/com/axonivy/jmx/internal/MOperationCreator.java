@@ -48,7 +48,7 @@ class MOperationCreator extends MCreator
 
   private void addMethodBasedOperationsDeclaredOn(Class<?> clazz, List<MethodBasedMOperation> operations)
   {
-    for (Method method : clazz.getDeclaredMethods())
+    for (Method method : MInternalUtils.getNonSyntheticDeclaredMethods(clazz))
     {
       MOperation operation = method.getAnnotation(MOperation.class);
       if (operation != null)

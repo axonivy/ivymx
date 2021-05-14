@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -140,6 +141,13 @@ class MInternalUtils
         };
     }
     throw new IllegalArgumentException("Not allowed to declare type attribute on an annotation if annotated field type or return type of the annotation method is '"+declaredType+"'");
+  }
+  
+  static Method[] getNonSyntheticDeclaredMethods(Class<?> type)
+  {
+    return Stream.of(type.getDeclaredMethods())
+        .filter(method ->!method.isSynthetic())
+        .toArray(Method[]::new);
   }
   
   private static boolean isAssignable(Type toType, Class<?> fromType)
