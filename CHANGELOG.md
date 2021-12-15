@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.2
+
+### Changed
+
+- Update dependency to Log4j2 from 2.13.3 to 1.16.0 because of CVE-2021-44228
+
 ## 1.2.1
 
 ### Changed
