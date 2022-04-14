@@ -19,9 +19,9 @@ import com.axonivy.jmx.MBean;
  */
 public class MMap<T, V> implements Map<T, V>
 {
-  private Map<T, V> originalMap;
+  private final Map<T, V> originalMap;
 
-  private MBeanManager manager = MBeanManager.getInstance();
+  private final MBeanManager manager = MBeanManager.getInstance();
 
   /**
    * Constructor
@@ -47,12 +47,12 @@ public class MMap<T, V> implements Map<T, V>
   @Override
   public V put(T key, V value)
   {
-    manager.ifAnnotatedRegisterMBeanFor(value);
     V previousValue = originalMap.put(key, value);
     if (value != previousValue)
     {
       manager.ifAnnotatedUnregisterMBeanFor(previousValue);
     }
+    manager.ifAnnotatedRegisterMBeanFor(value);
     return previousValue;
   }
 
