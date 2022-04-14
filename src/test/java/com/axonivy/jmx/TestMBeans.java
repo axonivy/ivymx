@@ -22,7 +22,7 @@ import com.axonivy.jmx.util.LogTestAppender;
 public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
 {
   private final LogTestAppender logAppender = new LogTestAppender(Level.ERROR);
-  
+
   public static class BaseTestBean
   {
     @SuppressWarnings("unused")
@@ -32,19 +32,27 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
     }
 
     @SuppressWarnings("unused")
-    private String surname="Name";
+    private final String surname="Name";
   }
 
   @MBean(value="Test:type=TestType,name=#{name}#{surname},app=#{pmv.application.name}", description="Description of #{application.name}")
   public static class TestBean extends BaseTestBean
   {
     @SuppressWarnings("unused")
-    private Application application = new Application();
+    private final Application application = new Application();
 
 
     public Pmv getPmv()
     {
       return new Pmv();
+    }
+  }
+
+  @MBean(value="Test:name=#{name}")
+  public static class ErrorBean {
+    @SuppressWarnings("unused")
+    private String getName() {
+      throw new IllegalStateException("Not allowed to call getName");
     }
   }
 
@@ -181,4 +189,23 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
     MBeans.registerMBeanFor(new Object());
     assertThat(logAppender.getRecording()).contains("Bean 'class java.lang.Object' must contain a @MBean annotation");
   }
+
+  @Test
+  public void testRegisterMBeanThrowsException() {
+    Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
+    assertThat(logAppender.getRecording()).isEmpty();
+    MBeans.registerMBeanFor(new ErrorBean());
+    assertThat(logAppender.getRecording()).contains("Cannot resolve 'name' on mBean 'com.axonivy.jmx.TestMBeans$ErrorBean");
+  }
+
+  @Test
+  public void testRegisterUnregisterMBeanThrowsException() {
+    Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
+    assertThat(logAppender.getRecording()).isEmpty();
+    Object bean = new ErrorBean();
+    MBeans.registerMBeanFor(bean);
+    MBeans.unregisterMBeanFor(bean);
+    assertThat(logAppender.getRecording()).contains("Cannot resolve 'name' on mBean 'com.axonivy.jmx.TestMBeans$ErrorBean");
+  }
+
 }
