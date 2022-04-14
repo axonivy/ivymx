@@ -1,10 +1,23 @@
 # Changelog
 
+## 1.2.3
+
+- Fix issue #27 MBeans.unregisterAllMBeans throws exception if an MBean could not be registered before because an error in resolving the object name
+- Fix issue #28 MMap.put should first unregister the bean that is already in the map before registering the new bean
+
+Update dependencies:
+- Log4j2 to 2.17.2
+- Slf4j to 1.7.36
+- Apache commons-lang to 3.12.0
+- JUnit4 to 4.13.2
+- JMockit to 1.49 
+- AssertJ to 3.22.0 
+
 ## 1.2.2
 
 ### Changed
 
-- Update dependency to Log4j2 from 2.13.3 to 1.16.0 because of CVE-2021-44228
+- Update dependency to Log4j2 from 2.13.3 to 2.16.0 because of CVE-2021-44228
 
 ## 1.2.1
 
