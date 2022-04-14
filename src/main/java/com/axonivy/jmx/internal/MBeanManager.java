@@ -29,13 +29,13 @@ import com.axonivy.jmx.MException;
  */
 public class MBeanManager
 {
-  private ExecutionContextContainer executionContexts = new ExecutionContextContainer();
+  private final ExecutionContextContainer executionContexts = new ExecutionContextContainer();
 
-  private ConcurrentHashMap<Object, MBeanProxy> proxyRegistry = new ConcurrentHashMap<Object, MBeanProxy>();
+  private final ConcurrentHashMap<Object, MBeanProxy> proxyRegistry = new ConcurrentHashMap<Object, MBeanProxy>();
 
-  private ConcurrentHashMap<Class<?>, MBeanType> mBeanTypes = new ConcurrentHashMap<Class<?>, MBeanType>();
+  private final ConcurrentHashMap<Class<?>, MBeanType> mBeanTypes = new ConcurrentHashMap<Class<?>, MBeanType>();
 
-  private OpenTypeConverterStrategy[] openTypeConverterStrategies = {
+  private final OpenTypeConverterStrategy[] openTypeConverterStrategies = {
           new SimpleTypeConverterStrategy(),
           new EnumTypeConverterStrategy(),
           new ListTypeConverterStrategy(this),
@@ -66,8 +66,8 @@ public class MBeanManager
       ensureMBeanProxyIsNotYetRegistered(object);
       MBeanType mBeanType = getMBeanTypeFor(object);
       MBeanProxy mBean = new MBeanProxy(mBeanType, object, parentName);
-      registerMBeanProxy(object, mBean);
       registerMBean(mBean);
+      registerMBeanProxy(object, mBean);
       registerCompositionMBeans(mBean);
     }
     catch(Throwable error)
