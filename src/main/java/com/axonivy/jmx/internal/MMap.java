@@ -51,8 +51,8 @@ public class MMap<T, V> implements Map<T, V>
     if (value != previousValue)
     {
       manager.ifAnnotatedUnregisterMBeanFor(previousValue);
+      manager.ifAnnotatedRegisterMBeanFor(value);
     }
-    manager.ifAnnotatedRegisterMBeanFor(value);
     return previousValue;
   }
 
@@ -120,12 +120,7 @@ public class MMap<T, V> implements Map<T, V>
   {
     for (Map.Entry<? extends T, ? extends V> entry : m.entrySet())
     {
-      manager.ifAnnotatedRegisterMBeanFor(entry.getValue());
-      Object previousValue = originalMap.put(entry.getKey(), entry.getValue());
-      if (previousValue != entry.getValue())
-      {
-        manager.ifAnnotatedUnregisterMBeanFor(previousValue);
-      }
+      put(entry.getKey(), entry.getValue());
     }
   }
 
