@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +41,15 @@ public class TestMMap extends BaseMTest<TestMMap.TestBean>
   @Before
   public void before()
   {
-    // Do not register test bean by default
+    MBeans.setRegisterMBeanErrorStrategy(MConstants.THROW_RUNTIME_EXCEPTION_ERROR_STRATEGY);
+  }
+
+  @Override
+  @After
+  public void after()
+  {
+    MBeans.setRegisterMBeanErrorStrategy(MConstants.DEFAULT_ERROR_STRATEGY);
+    MBeans.unregisterAllMBeans();
   }
 
   @Test
@@ -66,6 +75,22 @@ public class TestMMap extends BaseMTest<TestMMap.TestBean>
     testMap.put("blah", bean1);
     testMap.put("blah", bean2);
     assertThat(MBeans.getMBeanServer().isRegistered(new ObjectName("Test:name=Hello"))).isTrue();
+  }
+
+  @Test
+  public void testPutSameNameAndValue()
+  {
+    testMap.put("blah", testBean);
+    testMap.put("blah", testBean);
+    assertRegistered();
+  }
+
+  @Test
+  public void testPutNull()
+  {
+    testMap.put("blah", testBean);
+    testMap.put("blah", null);
+    assertNotRegistered();
   }
 
   @Test
