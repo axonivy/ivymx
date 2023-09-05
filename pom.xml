@@ -37,7 +37,7 @@
 		<revision>4-SNAPSHOT</revision>
 		<skip.gpg>true</skip.gpg>
 		<log4j.version>2.20.0</log4j.version>
-		<slf4j.version>2.0.7</slf4j.version>
+		<slf4j.version>2.0.9</slf4j.version>
 	</properties>
 
 	<profiles>
