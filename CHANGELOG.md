@@ -3,6 +3,7 @@
 ## 1.2.4
 
 Add method EventCounter#increase(long delta)
+Support Instant, LocalDateTime, OffsetDateTime, and ZonedDateTime types
 
 Update dependencies:
 - Log4j2 to 2.20.0

@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
@@ -13,7 +12,6 @@ import javax.management.MBeanServer;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import javax.management.openmbean.OpenType;
-
 import com.axonivy.jmx.IExecutionContext;
 import com.axonivy.jmx.IRegisterMBeanErrorStrategy;
 import com.axonivy.jmx.MBean;
@@ -37,6 +35,7 @@ public class MBeanManager
 
   private final OpenTypeConverterStrategy[] openTypeConverterStrategies = {
           new SimpleTypeConverterStrategy(),
+          new NewDateTimeApiConverterStrategy(),
           new EnumTypeConverterStrategy(),
           new ListTypeConverterStrategy(this),
           new CompositeTypeConverterStrategy(this),
