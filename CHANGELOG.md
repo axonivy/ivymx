@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.4
+
+Add method EventCounter#increase(long delta)
+
+Update dependencies:
+- Log4j2 to 2.20.0
+- Slf4j to 2.0.9
+- Apache commons-lang to 3.13.0
+- AssertJ to 3.24.2
+
 ## 1.2.3
 
 - Fix issue #27 MBeans.unregisterAllMBeans throws exception if an MBean could not be registered before because an error in resolving the object name
