@@ -14,7 +14,7 @@ pipeline {
   parameters {
     choice(name: 'deployProfile',
       description: 'Choose where the built plugin should be deployed to',
-      choices: ['sonatype.snapshots', 'maven.central.release'])
+      choices: ['central.snapshots', 'maven.central.release'])
 
     string(name: 'revision',
       description: 'Revision for this release, e.g. newest version "1.3.0" revision should be "1" (-> 1.3.1). Note: This is only used for release target!',
