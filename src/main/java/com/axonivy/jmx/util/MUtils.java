@@ -8,11 +8,9 @@ import javax.management.openmbean.TabularData;
 /**
  * Utility class that provides useful functions to manipulate JMX objects
  */
-public class MUtils
-{
+public class MUtils {
   @SuppressWarnings("unchecked")
-  public static Collection<CompositeData> toRows(TabularData tabularData)
-  {
+  public static Collection<CompositeData> toRows(TabularData tabularData) {
     return (Collection<CompositeData>) tabularData.values();
   }
 }

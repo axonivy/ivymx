@@ -13,10 +13,9 @@ import java.lang.annotation.Target;
  * @since 28.06.2013
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Inherited
-public @interface MItem
-{
+public @interface MItem {
   String description() default "";
 
   String name() default "";

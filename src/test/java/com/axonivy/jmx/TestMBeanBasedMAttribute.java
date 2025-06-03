@@ -14,50 +14,43 @@ import javax.management.ReflectionException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestMBeanBasedMAttribute extends BaseMTest<TestMBeanBasedMAttribute.TestBean>
-{
+public class TestMBeanBasedMAttribute extends BaseMTest<TestMBeanBasedMAttribute.TestBean> {
   @MBean("Test:type=TestType")
-  public static class TestBean
-  {
+  public static class TestBean {
     @MAttribute
     private EmbeddedBean beanField;
-    
+
     private EmbeddedBean beanMethod;
 
     @MAttribute
-    public EmbeddedBean getBeanMethod()
-    {
+    public EmbeddedBean getBeanMethod() {
       return beanMethod;
-    }    
+    }
   }
-  
+
   @Override
   @Before
-  public void before()
-  {
-    super.before();    
+  public void before() {
+    super.before();
     MBeans.registerMBeanFor(embeddedBean);
   }
-  
+
   @MBean("Test:type=EmbeddedBean")
-  public static class EmbeddedBean
-  {
-    @MAttribute 
+  public static class EmbeddedBean {
+    @MAttribute
     String test = "Hello World";
   }
 
   private final EmbeddedBean embeddedBean = new EmbeddedBean();
   private final Object embeddedBeanName;
-  
-  public TestMBeanBasedMAttribute() throws MalformedObjectNameException
-  {
+
+  public TestMBeanBasedMAttribute() throws MalformedObjectNameException {
     super(new TestBean(), "Test:type=TestType");
-    embeddedBeanName= new ObjectName("Test:type=EmbeddedBean");
+    embeddedBeanName = new ObjectName("Test:type=EmbeddedBean");
   }
-  
+
   @Test
-  public void testAttributeInfoBeanField() throws IntrospectionException, InstanceNotFoundException, ReflectionException 
-  {
+  public void testAttributeInfoBeanField() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("beanField");
     assertThat(attributeInfo.getDescription()).isEqualTo("beanField");
     assertThat(attributeInfo.getType()).isEqualTo(ObjectName.class.getName());
@@ -65,10 +58,9 @@ public class TestMBeanBasedMAttribute extends BaseMTest<TestMBeanBasedMAttribute
     assertThat(attributeInfo.isWritable()).isEqualTo(false);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
   }
-  
+
   @Test
-  public void testReadAttributeBeanField() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeBeanField() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.beanField = null;
     assertThat(getAttribute("beanField")).isNull();
     testBean.beanField = embeddedBean;
@@ -76,8 +68,7 @@ public class TestMBeanBasedMAttribute extends BaseMTest<TestMBeanBasedMAttribute
   }
 
   @Test
-  public void testAttributeInfoEnumMethod() throws IntrospectionException, InstanceNotFoundException, ReflectionException 
-  {
+  public void testAttributeInfoEnumMethod() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("beanMethod");
     assertThat(attributeInfo.getDescription()).isEqualTo("beanMethod");
     assertThat(attributeInfo.getType()).isEqualTo(ObjectName.class.getName());
@@ -85,10 +76,9 @@ public class TestMBeanBasedMAttribute extends BaseMTest<TestMBeanBasedMAttribute
     assertThat(attributeInfo.isWritable()).isEqualTo(false);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
   }
-  
+
   @Test
-  public void testReadAttributeEnumMethod() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeEnumMethod() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.beanMethod = null;
     assertThat(getAttribute("beanMethod")).isNull();
     testBean.beanMethod = embeddedBean;

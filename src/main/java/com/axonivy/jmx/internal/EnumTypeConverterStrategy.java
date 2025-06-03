@@ -6,30 +6,26 @@ import javax.management.openmbean.OpenType;
 import javax.management.openmbean.SimpleType;
 
 /**
- * Strategy to convert values of {@link Enum} classes to Strings values  
+ * Strategy to convert values of {@link Enum} classes to Strings values
  * @author rwei
  * @since 01.07.2013
  */
-class EnumTypeConverterStrategy implements OpenTypeConverterStrategy
-{
+class EnumTypeConverterStrategy implements OpenTypeConverterStrategy {
 
   @Override
-  public boolean canHandle(Type type)
-  {    
-    return (type instanceof Class) && ((Class<?>)type).isEnum();
+  public boolean canHandle(Type type) {
+    return (type instanceof Class) && ((Class<?>) type).isEnum();
   }
 
   @Override
-  public OpenType<?> toOpenType(Type type)
-  {
+  public OpenType<?> toOpenType(Type type) {
     return SimpleType.STRING;
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   @Override
-  public AbstractValueConverter getValueConverter(Type type)
-  {
-    return new EnumValueConverter((Class<?>)type);
+  public AbstractValueConverter getValueConverter(Type type) {
+    return new EnumValueConverter((Class<?>) type);
   }
 
 }

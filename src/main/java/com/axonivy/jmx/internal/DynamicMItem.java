@@ -8,39 +8,32 @@ import javax.management.openmbean.OpenType;
  * @author rwei
  * @since 01.07.2013
  */
-class DynamicMItem
-{
+class DynamicMItem {
   private String name;
   private String description;
   private OpenType<?> openType;
   private AbstractValueAccessor valueAccessor;
-  
-  DynamicMItem(String name, String description, OpenType<?> openType, AbstractValueAccessor valueAccessor)
-  {
+
+  DynamicMItem(String name, String description, OpenType<?> openType, AbstractValueAccessor valueAccessor) {
     this.name = name;
     this.description = description;
     this.openType = openType;
     this.valueAccessor = valueAccessor;
   }
 
-  String getName()
-  {
+  String getName() {
     return name;
   }
-  
-  String getDescription()
-  {
+
+  String getDescription() {
     return description;
   }
 
-  OpenType<?> getOpenType()
-  {
+  OpenType<?> getOpenType() {
     return openType;
   }
-  
- 
-  Object getValue(Object beanInstance) throws MBeanException
-  {
+
+  Object getValue(Object beanInstance) throws MBeanException {
     return valueAccessor.getValue(beanInstance);
   }
 }

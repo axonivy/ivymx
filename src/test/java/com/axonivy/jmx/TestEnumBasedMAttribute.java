@@ -15,42 +15,35 @@ import org.junit.Test;
 
 import com.axonivy.jmx.TestEnumBasedMAttribute.TestBean.TestEnum;
 
-public class TestEnumBasedMAttribute extends BaseMTest<TestEnumBasedMAttribute.TestBean>
-{
+public class TestEnumBasedMAttribute extends BaseMTest<TestEnumBasedMAttribute.TestBean> {
   @MBean("Test:type=TestType")
-  public static class TestBean
-  {
-    public enum TestEnum
-    {
+  public static class TestBean {
+    public enum TestEnum {
       VALUE1,
       VALUE2
     }
 
-    @MAttribute(isWritable=true)
+    @MAttribute(isWritable = true)
     private TestEnum enumField;
-    
+
     private TestEnum enumMethod;
 
-    @MAttribute(isWritable=true)
-    public TestEnum getEnumMethod()
-    {
+    @MAttribute(isWritable = true)
+    public TestEnum getEnumMethod() {
       return enumMethod;
     }
-    
-    public void setEnumMethod(TestEnum enumMethod)
-    {
+
+    public void setEnumMethod(TestEnum enumMethod) {
       this.enumMethod = enumMethod;
     }
   }
 
-  public TestEnumBasedMAttribute() throws MalformedObjectNameException
-  {
+  public TestEnumBasedMAttribute() throws MalformedObjectNameException {
     super(new TestBean(), "Test:type=TestType");
   }
-  
+
   @Test
-  public void testAttributeInfoEnumField() throws IntrospectionException, InstanceNotFoundException, ReflectionException 
-  {
+  public void testAttributeInfoEnumField() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("enumField");
     assertThat(attributeInfo.getDescription()).isEqualTo("enumField");
     assertThat(attributeInfo.getType()).isEqualTo("java.lang.String");
@@ -58,10 +51,9 @@ public class TestEnumBasedMAttribute extends BaseMTest<TestEnumBasedMAttribute.T
     assertThat(attributeInfo.isWritable()).isEqualTo(true);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
   }
-  
+
   @Test
-  public void testReadAttributeEnumField() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeEnumField() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.enumField = TestEnum.VALUE1;
     assertThat(getAttribute("enumField")).isEqualTo(TestEnum.VALUE1.name());
     testBean.enumField = TestEnum.VALUE2;
@@ -69,8 +61,7 @@ public class TestEnumBasedMAttribute extends BaseMTest<TestEnumBasedMAttribute.T
   }
 
   @Test
-  public void testWriteAttributeEnumField() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException
-  {
+  public void testWriteAttributeEnumField() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException {
     setAttribute("enumField", TestEnum.VALUE1.name());
     assertThat(testBean.enumField).isEqualTo(TestEnum.VALUE1);
     setAttribute("enumField", TestEnum.VALUE2.name());
@@ -78,8 +69,7 @@ public class TestEnumBasedMAttribute extends BaseMTest<TestEnumBasedMAttribute.T
   }
 
   @Test
-  public void testAttributeInfoEnumMethod() throws IntrospectionException, InstanceNotFoundException, ReflectionException 
-  {
+  public void testAttributeInfoEnumMethod() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("enumMethod");
     assertThat(attributeInfo.getDescription()).isEqualTo("enumMethod");
     assertThat(attributeInfo.getType()).isEqualTo("java.lang.String");
@@ -87,10 +77,9 @@ public class TestEnumBasedMAttribute extends BaseMTest<TestEnumBasedMAttribute.T
     assertThat(attributeInfo.isWritable()).isEqualTo(true);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
   }
-  
+
   @Test
-  public void testReadAttributeEnumMethod() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeEnumMethod() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.enumMethod = TestEnum.VALUE1;
     assertThat(getAttribute("enumMethod")).isEqualTo(TestEnum.VALUE1.name());
     testBean.enumMethod = TestEnum.VALUE2;
@@ -98,8 +87,7 @@ public class TestEnumBasedMAttribute extends BaseMTest<TestEnumBasedMAttribute.T
   }
 
   @Test
-  public void testWriteAttributeEnumMethod() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException
-  {
+  public void testWriteAttributeEnumMethod() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException {
     setAttribute("enumMethod", TestEnum.VALUE1.name());
     assertThat(testBean.enumMethod).isEqualTo(TestEnum.VALUE1);
     setAttribute("enumMethod", TestEnum.VALUE2.name());

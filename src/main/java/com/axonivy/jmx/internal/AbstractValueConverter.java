@@ -8,8 +8,7 @@ import javax.management.MBeanException;
  * @since 01.07.2013
  * @see javax.management.openmbean.OpenType
  */
-abstract class AbstractValueConverter
-{
+abstract class AbstractValueConverter {
   protected abstract Object toOpenDataValue(Object javaValue) throws MBeanException;
 
   protected abstract Object toJavaValue(Object openDataValue) throws MBeanException;

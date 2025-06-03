@@ -19,36 +19,30 @@ import org.junit.Test;
 import com.axonivy.jmx.internal.LogErrorStrategy;
 import com.axonivy.jmx.util.LogTestAppender;
 
-public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
-{
+public class TestMBeans extends BaseMTest<TestMBeans.TestBean> {
   private final LogTestAppender logAppender = new LogTestAppender(Level.ERROR);
 
-  public static class BaseTestBean
-  {
+  public static class BaseTestBean {
     @SuppressWarnings("unused")
-    private String getName()
-    {
+    private String getName() {
       return "Test";
     }
 
     @SuppressWarnings("unused")
-    private final String surname="Name";
+    private final String surname = "Name";
   }
 
-  @MBean(value="Test:type=TestType,name=#{name}#{surname},app=#{pmv.application.name}", description="Description of #{application.name}")
-  public static class TestBean extends BaseTestBean
-  {
+  @MBean(value = "Test:type=TestType,name=#{name}#{surname},app=#{pmv.application.name}", description = "Description of #{application.name}")
+  public static class TestBean extends BaseTestBean {
     @SuppressWarnings("unused")
     private final Application application = new Application();
 
-
-    public Pmv getPmv()
-    {
+    public Pmv getPmv() {
       return new Pmv();
     }
   }
 
-  @MBean(value="Test:name=#{name}")
+  @MBean(value = "Test:name=#{name}")
   public static class ErrorBean {
     @SuppressWarnings("unused")
     private String getName() {
@@ -56,35 +50,27 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
     }
   }
 
-  public static class Pmv
-  {
-    public Application getApplication()
-    {
+  public static class Pmv {
+    public Application getApplication() {
       return new Application();
     }
   }
 
-  public static class Application
-  {
-    public String getName()
-    {
+  public static class Application {
+    public String getName() {
       return "TestApp";
     }
   }
 
-  @MBean(value="Test:name=TestUniqueName", makeNameUnique=true)
-  public static class TestUniqueNameBean
-  {
-  }
+  @MBean(value = "Test:name=TestUniqueName", makeNameUnique = true)
+  public static class TestUniqueNameBean {}
 
-  public TestMBeans() throws MalformedObjectNameException
-  {
+  public TestMBeans() throws MalformedObjectNameException {
     super(new TestBean(), "Test:type=TestType,name=TestName,app=TestApp");
   }
 
   @Test
-  public void testRegister() throws InstanceNotFoundException, NullPointerException
-  {
+  public void testRegister() throws InstanceNotFoundException, NullPointerException {
     ObjectInstance objectInstance = getTestBeanFromBeanServer();
     assertThat(objectInstance).isNotNull();
     assertThat(objectInstance.getClassName()).isEqualTo(TestBean.class.getName());
@@ -92,8 +78,7 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
   }
 
   @Test
-  public void testRegisterCollection() throws InstanceNotFoundException, MalformedObjectNameException, NullPointerException
-  {
+  public void testRegisterCollection() throws InstanceNotFoundException, MalformedObjectNameException, NullPointerException {
     MBeans.unregisterAllMBeans();
     List<Object> beans = Arrays.asList(new TestUniqueNameBean(), new TestUniqueNameBean(), new TestBean(), new Object());
     MBeans.registerMBeansFor(beans);
@@ -106,14 +91,12 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
   }
 
   @Test
-  public void testRegisterSameNameTwice()
-  {
+  public void testRegisterSameNameTwice() {
     MBeans.registerMBeanFor(new TestBean());
   }
 
   @Test
-  public void testMakeUniqueName() throws MalformedObjectNameException, NullPointerException
-  {
+  public void testMakeUniqueName() throws MalformedObjectNameException, NullPointerException {
     ObjectInstance objectInstance1 = getBeanOrNullFromBeanServer("Test:name=TestUniqueName");
     ObjectInstance objectInstance2 = getBeanOrNullFromBeanServer("Test:name=TestUniqueName @1");
     ObjectInstance objectInstance3 = getBeanOrNullFromBeanServer("Test:name=TestUniqueName @2");
@@ -154,15 +137,13 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
   }
 
   @Test
-  public void testUnregister()
-  {
+  public void testUnregister() {
     MBeans.unregisterMBeanFor(testBean);
-    assertThatThrownBy(() -> getTestBeanFromBeanServer()).isInstanceOf(InstanceNotFoundException.class);
+    assertThatThrownBy(this::getTestBeanFromBeanServer).isInstanceOf(InstanceNotFoundException.class);
   }
 
   @Test
-  public void testUnregisterCollection() throws MalformedObjectNameException, NullPointerException
-  {
+  public void testUnregisterCollection() throws MalformedObjectNameException, NullPointerException {
     MBeans.unregisterAllMBeans();
     List<Object> beans = Arrays.asList(new TestUniqueNameBean(), new TestUniqueNameBean(), new TestBean(), new Object());
     MBeans.registerMBeansFor(beans);
@@ -176,14 +157,12 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean>
   }
 
   @Test
-  public void testDescription() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testDescription() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     assertThat(getMBeanInfoFromBeanServer().getDescription()).isEqualTo("Description of TestApp");
   }
 
   @Test
-  public void testRegisterNotMBean()
-  {
+  public void testRegisterNotMBean() {
     Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
     assertThat(logAppender.getRecording()).isEmpty();
     MBeans.registerMBeanFor(new Object());

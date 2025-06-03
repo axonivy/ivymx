@@ -46,10 +46,9 @@ import java.lang.annotation.Target;
  * @since 23.08.2013
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Inherited
-public @interface MCompositionReference
-{
+public @interface MCompositionReference {
   /**
    * If set to true then the name of the composition {@link MBean mbean} is build by concat the name of the parent {@link MBean mbean}
    * with the {@link MBean#value() value} attribute of the composition {@link MBean mbean} {@code @MBean}annotation.

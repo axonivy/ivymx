@@ -17,8 +17,7 @@ import com.axonivy.jmx.MBean;
  * @param <T> map key type
  * @param <V> map value type
  */
-public class MMap<T, V> implements Map<T, V>
-{
+public class MMap<T, V> implements Map<T, V> {
   private final Map<T, V> originalMap;
 
   private final MBeanManager manager = MBeanManager.getInstance();
@@ -27,8 +26,7 @@ public class MMap<T, V> implements Map<T, V>
    * Constructor
    * @param originalMap original map
    */
-  public MMap(Map<T, V> originalMap)
-  {
+  public MMap(Map<T, V> originalMap) {
     this.originalMap = originalMap;
   }
 
@@ -36,8 +34,7 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.AbstractMap#entrySet()
    */
   @Override
-  public Set<java.util.Map.Entry<T, V>> entrySet()
-  {
+  public Set<java.util.Map.Entry<T, V>> entrySet() {
     return originalMap.entrySet();
   }
 
@@ -45,11 +42,9 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.AbstractMap#put(java.lang.Object, java.lang.Object)
    */
   @Override
-  public V put(T key, V value)
-  {
+  public V put(T key, V value) {
     V previousValue = originalMap.put(key, value);
-    if (value != previousValue)
-    {
+    if (value != previousValue) {
       manager.ifAnnotatedUnregisterMBeanFor(previousValue);
       manager.ifAnnotatedRegisterMBeanFor(value);
     }
@@ -60,8 +55,7 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#size()
    */
   @Override
-  public int size()
-  {
+  public int size() {
     return originalMap.size();
   }
 
@@ -69,8 +63,7 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#isEmpty()
    */
   @Override
-  public boolean isEmpty()
-  {
+  public boolean isEmpty() {
     return originalMap.isEmpty();
   }
 
@@ -78,8 +71,7 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#containsKey(java.lang.Object)
    */
   @Override
-  public boolean containsKey(Object key)
-  {
+  public boolean containsKey(Object key) {
     return originalMap.containsKey(key);
   }
 
@@ -87,8 +79,7 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#containsValue(java.lang.Object)
    */
   @Override
-  public boolean containsValue(Object value)
-  {
+  public boolean containsValue(Object value) {
     return originalMap.containsValue(value);
   }
 
@@ -96,8 +87,7 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#get(java.lang.Object)
    */
   @Override
-  public V get(Object key)
-  {
+  public V get(Object key) {
     return originalMap.get(key);
   }
 
@@ -105,8 +95,7 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#remove(java.lang.Object)
    */
   @Override
-  public V remove(Object key)
-  {
+  public V remove(Object key) {
     V removedObject = originalMap.remove(key);
     manager.ifAnnotatedUnregisterMBeanFor(removedObject);
     return removedObject;
@@ -116,10 +105,8 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#putAll(java.util.Map)
    */
   @Override
-  public void putAll(Map<? extends T, ? extends V> m)
-  {
-    for (Map.Entry<? extends T, ? extends V> entry : m.entrySet())
-    {
+  public void putAll(Map<? extends T, ? extends V> m) {
+    for (Map.Entry<? extends T, ? extends V> entry : m.entrySet()) {
       put(entry.getKey(), entry.getValue());
     }
   }
@@ -128,10 +115,8 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#clear()
    */
   @Override
-  public void clear()
-  {
-    for (V value : values())
-    {
+  public void clear() {
+    for (V value : values()) {
       manager.ifAnnotatedUnregisterMBeanFor(value);
     }
     originalMap.clear();
@@ -141,8 +126,7 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#keySet()
    */
   @Override
-  public Set<T> keySet()
-  {
+  public Set<T> keySet() {
     return originalMap.keySet();
   }
 
@@ -150,8 +134,7 @@ public class MMap<T, V> implements Map<T, V>
    * @see java.util.Map#values()
    */
   @Override
-  public Collection<V> values()
-  {
+  public Collection<V> values() {
     return originalMap.values();
   }
 }

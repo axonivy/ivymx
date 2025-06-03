@@ -13,59 +13,45 @@ import javax.management.openmbean.SimpleType;
  * @author rwei
  * @since 01.07.2013
  */
-public class UriTypeConverterStrategy implements OpenTypeConverterStrategy
-{
+public class UriTypeConverterStrategy implements OpenTypeConverterStrategy {
 
   @Override
-  public boolean canHandle(Type type)
-  {
+  public boolean canHandle(Type type) {
     return URI.class.equals(type);
   }
 
   @Override
-  public OpenType<?> toOpenType(Type type)
-  {
+  public OpenType<?> toOpenType(Type type) {
     return SimpleType.STRING;
   }
 
   @Override
-  public AbstractValueConverter getValueConverter(Type type)
-  {
+  public AbstractValueConverter getValueConverter(Type type) {
     return UriValueConverter.INSTANCE;
   }
 
-  private static class UriValueConverter extends AbstractValueConverter
-  {
+  private static class UriValueConverter extends AbstractValueConverter {
     static final AbstractValueConverter INSTANCE = new UriValueConverter();
-    
-    private UriValueConverter()
-    {      
-    }
+
+    private UriValueConverter() {}
 
     @Override
-    public Object toOpenDataValue(Object javaValue)
-    {
-      if (javaValue == null)
-      {
-        return null;      
+    public Object toOpenDataValue(Object javaValue) {
+      if (javaValue == null) {
+        return null;
       }
       return javaValue.toString();
 
     }
 
     @Override
-    public Object toJavaValue(Object openDataValue) throws MBeanException
-    {
-      if (openDataValue == null)
-      {
+    public Object toJavaValue(Object openDataValue) throws MBeanException {
+      if (openDataValue == null) {
         return openDataValue;
       }
-      try
-      {
+      try {
         return new URI(openDataValue.toString());
-      }
-      catch(URISyntaxException ex)
-      {
+      } catch (URISyntaxException ex) {
         throw new MBeanException(ex);
       }
     }

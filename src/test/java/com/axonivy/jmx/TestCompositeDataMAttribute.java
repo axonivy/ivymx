@@ -30,83 +30,71 @@ import com.axonivy.jmx.TestMBeans.BaseTestBean;
 import com.axonivy.jmx.internal.LogErrorStrategy;
 import com.axonivy.jmx.util.LogTestAppender;
 
-public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAttribute.TestBean>
-{
+public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAttribute.TestBean> {
   private final LogTestAppender logAppender = new LogTestAppender(Level.ERROR);
-  
-  public TestCompositeDataMAttribute() throws MalformedObjectNameException
-  {
+
+  public TestCompositeDataMAttribute() throws MalformedObjectNameException {
     super(new TestBean(), "Test:type=TestType");
   }
 
-  @MBean(value="Test:type=TestType")
-  public static class TestBean extends BaseTestBean
-  {
+  @MBean(value = "Test:type=TestType")
+  public static class TestBean extends BaseTestBean {
     @MAttribute
     private CompData compositeData = new CompData();
-    
-    @MAttribute
-    private List<CompData> compositeDatas = new ArrayList<CompData>();
 
+    @MAttribute
+    private final List<CompData> compositeDatas = new ArrayList<>();
   }
 
   @MComposite("Composite Data 1")
-  public static class CompData
-  {
+  public static class CompData {
     @MItem
     private String item1;
-    @MItem(description="Item Nr. 2")
+    @MItem(description = "Item Nr. 2")
     private CompositeData2 item2 = new CompositeData2();
-    
+
     private Integer count;
-    
+
     @MItem
-    private Integer getCount()
-    {
+    private Integer getCount() {
       return count;
     }
   }
-  
+
   @MComposite
-  public static class CompositeData2
-  {
-    @MItem(name="startDate")
+  public static class CompositeData2 {
+    @MItem(name = "startDate")
     private Date date;
   }
-  
+
   @MBean("ivy:type=TestBean2")
-  public static class TestBean2
-  {
+  public static class TestBean2 {
     @MAttribute
     private RecursiveComposite recursiveComposite;
   }
-  
+
   @MComposite
-  public static class RecursiveComposite
-  { 
-    @MItem 
+  public static class RecursiveComposite {
+    @MItem
     private RecursiveComposite recursiveItem;
   }
-  
+
   @Before
   @Override
-  public void before()
-  {
+  public void before() {
     super.before();
     Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
   }
-  
+
   @After
   @Override
-  public void after()
-  {
+  public void after() {
     super.after();
     Logger.getLogger(LogErrorStrategy.class).removeAppender(logAppender);
   }
 
   @Test
-  public void testCompositeDataInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testCompositeDataInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("compositeData");
     assertThat(attributeInfo.getDescription()).isEqualTo("compositeData");
     assertThat(attributeInfo).isInstanceOf(OpenMBeanAttributeInfo.class);
@@ -114,15 +102,14 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
     assertThat(attributeInfo.isWritable()).isEqualTo(false);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
 
-    OpenMBeanAttributeInfo openAttributeInfo = (OpenMBeanAttributeInfo)attributeInfo;
+    OpenMBeanAttributeInfo openAttributeInfo = (OpenMBeanAttributeInfo) attributeInfo;
     OpenType<?> openType = openAttributeInfo.getOpenType();
     assertThat(openType).isNotNull();
     assertThat(openType).isInstanceOf(CompositeType.class);
   }
-  
+
   @Test
-  public void testCompositeTypeOfCompData() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testCompositeTypeOfCompData() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     CompositeType compType = getCompositeTypeForCompData();
     assertThat(compType.getClassName()).isEqualTo(CompositeData.class.getName());
     assertThat(compType.getTypeName()).isEqualTo(CompData.class.getName());
@@ -132,17 +119,16 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
     assertThat(compType.getDescription("item1")).isEqualTo("item1");
     assertThat(compType.getDescription("item2")).isEqualTo("Item Nr. 2");
     assertThat(compType.getDescription("count")).isEqualTo("count");
-    assertThat((Object)compType.getType("item1")).isEqualTo(SimpleType.STRING);
-    assertThat((Object)compType.getType("count")).isEqualTo(SimpleType.INTEGER);
+    assertThat((Object) compType.getType("item1")).isEqualTo(SimpleType.STRING);
+    assertThat((Object) compType.getType("count")).isEqualTo(SimpleType.INTEGER);
     OpenType<?> openType = compType.getType("item2");
     assertThat(openType).isNotNull();
     assertThat(openType).isInstanceOf(CompositeType.class);
   }
-  
+
   @Test
-  public void testCompositeTypeOfCompositeData2() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
-    CompositeType compType = getCompositeTypeForCompositeData2();    
+  public void testCompositeTypeOfCompositeData2() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
+    CompositeType compType = getCompositeTypeForCompositeData2();
     assertThat(compType).isNotNull();
     assertThat(compType.getClassName()).isEqualTo(CompositeData.class.getName());
     assertThat(compType.getTypeName()).isEqualTo(CompositeData2.class.getName());
@@ -150,12 +136,11 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
     assertThat(compType.keySet()).hasSize(1);
     assertThat(compType.keySet()).contains("startDate");
     assertThat(compType.getDescription("startDate")).isEqualTo("startDate");
-    assertThat((Object)compType.getType("startDate")).isEqualTo(SimpleType.DATE);
+    assertThat((Object) compType.getType("startDate")).isEqualTo(SimpleType.DATE);
   }
 
   @Test
-  public void testReadCompositeData() throws InstanceNotFoundException, ReflectionException, AttributeNotFoundException, MBeanException, IntrospectionException
-  {
+  public void testReadCompositeData() throws InstanceNotFoundException, ReflectionException, AttributeNotFoundException, MBeanException, IntrospectionException {
     testBean.compositeData.item1 = "Hi all";
     testBean.compositeData.count = 14;
     Date testDate = new Date();
@@ -164,21 +149,20 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
     Object value = getAttribute("compositeData");
     assertThat(value).isNotNull();
     assertThat(value).isInstanceOf(CompositeData.class);
-    CompositeData data = (CompositeData)value;
+    CompositeData data = (CompositeData) value;
     assertThat(data.getCompositeType()).isEqualTo(getCompositeTypeForCompData());
-    
+
     assertThat(data.get("item1")).isEqualTo("Hi all");
     assertThat(data.get("count")).isEqualTo(14);
     assertThat(data.get("item2")).isNotNull();
     assertThat(data.get("item2")).isInstanceOf(CompositeData.class);
-    CompositeData data2 = (CompositeData)data.get("item2");
+    CompositeData data2 = (CompositeData) data.get("item2");
     assertThat(data2.getCompositeType()).isEqualTo(getCompositeTypeForCompositeData2());
     assertThat(data2.get("startDate")).isEqualTo(testDate);
   }
 
   @Test
-  public void testReadNullCompositeData() throws InstanceNotFoundException, ReflectionException, AttributeNotFoundException, MBeanException
-  {
+  public void testReadNullCompositeData() throws InstanceNotFoundException, ReflectionException, AttributeNotFoundException, MBeanException {
     testBean.compositeData = null;
 
     Object value = getAttribute("compositeData");
@@ -186,20 +170,18 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
   }
 
   @Test
-  public void testReadNullCompData() throws InstanceNotFoundException, ReflectionException, AttributeNotFoundException, MBeanException
-  {
-    testBean.compositeData.item2=null;
+  public void testReadNullCompData() throws InstanceNotFoundException, ReflectionException, AttributeNotFoundException, MBeanException {
+    testBean.compositeData.item2 = null;
 
     Object value = getAttribute("compositeData");
     assertThat(value).isNotNull();
     assertThat(value).isInstanceOf(CompositeData.class);
-    CompositeData data = (CompositeData)value;
+    CompositeData data = (CompositeData) value;
     assertThat(data.get("item2")).isNull();
   }
 
   @Test
-  public void testCompositeDatasInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testCompositeDatasInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("compositeDatas");
     assertThat(attributeInfo.getDescription()).isEqualTo("compositeDatas");
     assertThat(attributeInfo).isInstanceOf(OpenMBeanAttributeInfo.class);
@@ -207,28 +189,26 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
     assertThat(attributeInfo.isWritable()).isEqualTo(false);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
 
-    OpenMBeanAttributeInfo openAttributeInfo = (OpenMBeanAttributeInfo)attributeInfo;
+    OpenMBeanAttributeInfo openAttributeInfo = (OpenMBeanAttributeInfo) attributeInfo;
     OpenType<?> openType = openAttributeInfo.getOpenType();
     assertThat(openType).isNotNull();
     assertThat(openType).isInstanceOf(ArrayType.class);
-    ArrayType<?> arrayType = (ArrayType<?>)openType;
+    ArrayType<?> arrayType = (ArrayType<?>) openType;
     assertThat(arrayType.getDimension()).isEqualTo(1);
     assertThat(arrayType.getElementOpenType()).isInstanceOf(CompositeType.class);
-    assertThat((CompositeType)arrayType.getElementOpenType()).isEqualTo(getCompositeTypeForCompData());
+    assertThat((CompositeType) arrayType.getElementOpenType()).isEqualTo(getCompositeTypeForCompData());
   }
-  
+
   @Test
-  public void testEmptyCompositeDatas() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testEmptyCompositeDatas() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     Object value = getAttribute("compositeDatas");
     assertThat(value).isInstanceOf(CompositeData[].class);
-    CompositeData[] datas = (CompositeData[])value;
+    CompositeData[] datas = (CompositeData[]) value;
     assertThat(datas).hasSize(0);
   }
 
   @Test
-  public void testCompositeDatas() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testCompositeDatas() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     CompData data = new CompData();
     data.item1 = "Hello";
     testBean.compositeDatas.add(data);
@@ -238,36 +218,31 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
     data.item2.date = testDate;
     testBean.compositeDatas.add(data);
     Object value = getAttribute("compositeDatas");
-    CompositeData[] datas = (CompositeData[])value;
+    CompositeData[] datas = (CompositeData[]) value;
     assertThat(datas).hasSize(2);
     assertThat(datas[0].get("item1")).isEqualTo("Hello");
     assertThat(datas[1].get("item2")).isInstanceOf(CompositeData.class);
-    CompositeData item2 = (CompositeData)datas[1].get("item2");
+    CompositeData item2 = (CompositeData) datas[1].get("item2");
     assertThat(item2.get("startDate")).isEqualTo(testDate);
   }
-  
+
   @Test
-  public void testRecursiveCompositeClass()
-  {
+  public void testRecursiveCompositeClass() {
     assertThat(logAppender.getRecording()).isEmpty();
     MBeans.registerMBeanFor(new TestBean2());
     assertThat(logAppender.getRecording()).contains("Could not register MBean 'com.axonivy.jmx.TestCompositeDataMAttribute$TestBean");
     assertThat(logAppender.getRecording()).contains("java.lang.StackOverflowError");
   }
-  
-  private CompositeType getCompositeTypeForCompositeData2() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
-    OpenType<?> openType = getCompositeTypeForCompData().getType("item2"); 
-    CompositeType compType = (CompositeType)openType;
-    return compType;
+
+  private CompositeType getCompositeTypeForCompositeData2() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
+    OpenType<?> openType = getCompositeTypeForCompData().getType("item2");
+    return (CompositeType) openType;
   }
 
   private CompositeType getCompositeTypeForCompData() throws IntrospectionException,
-          InstanceNotFoundException, ReflectionException
-  {
+      InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("compositeData");
-    OpenType<?> openType = ((OpenMBeanAttributeInfo)attributeInfo).getOpenType(); 
-    CompositeType compType = (CompositeType)openType;
-    return compType;
+    OpenType<?> openType = ((OpenMBeanAttributeInfo) attributeInfo).getOpenType();
+    return (CompositeType) openType;
   }
 }

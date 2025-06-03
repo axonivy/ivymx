@@ -19,29 +19,24 @@ import com.axonivy.jmx.MException;
  * @author rwei
  * @since 01.07.2013
  */
-class MCompositeType
-{
+class MCompositeType {
   private Class<?> mCompositeClass;
   private MComposite annotation;
   private OpenType<?> openType;
   private Map<String, DynamicMItem> items = new HashMap<String, DynamicMItem>();
   private MBeanManager manager;
 
-  MCompositeType(MBeanManager manager, Class<?> mCompositeClass)
-  {
+  MCompositeType(MBeanManager manager, Class<?> mCompositeClass) {
     this.manager = manager;
     this.mCompositeClass = mCompositeClass;
     annotation = mCompositeClass.getAnnotation(MComposite.class);
-    if (annotation == null)
-    {
-      throw new IllegalArgumentException("Composite class '"+mCompositeClass+"' must contain a @MComposite annotation");
+    if (annotation == null) {
+      throw new IllegalArgumentException("Composite class '" + mCompositeClass + "' must contain a @MComposite annotation");
     }
   }
 
-  OpenType<?> getOpenType()
-  {
-    if (openType == null)
-    {
+  OpenType<?> getOpenType() {
+    if (openType == null) {
       String name = mCompositeClass.getName();
       String description = MInternalUtils.getDescription(annotation.value(), name);
 
@@ -51,65 +46,51 @@ class MCompositeType
 
       addItems(itemNames, itemDescriptions, itemTypes);
 
-      try
-      {
+      try {
         openType = new CompositeType(name, description,
-                itemNames.toArray(new String[itemNames.size()]),
-                itemDescriptions.toArray(new String[itemDescriptions.size()]),
-                itemTypes.toArray(new OpenType[itemTypes.size()]));
-      }
-      catch (OpenDataException ex)
-      {
+            itemNames.toArray(new String[itemNames.size()]),
+            itemDescriptions.toArray(new String[itemDescriptions.size()]),
+            itemTypes.toArray(new OpenType[itemTypes.size()]));
+      } catch (OpenDataException ex) {
         throw new MException(ex);
       }
     }
     return openType;
   }
 
-  private void addItems(List<String> itemNames, List<String> itemDescriptions, List<OpenType<?>> itemTypes)
-  {
+  private void addItems(List<String> itemNames, List<String> itemDescriptions, List<OpenType<?>> itemTypes) {
     items = MItemCreator.create(manager, mCompositeClass);
-    for (DynamicMItem item : items.values())
-    {
+    for (DynamicMItem item : items.values()) {
       itemNames.add(item.getName());
       itemDescriptions.add(item.getDescription());
       itemTypes.add(item.getOpenType());
     }
   }
 
-  AbstractValueConverter getValueConverter()
-  {
+  AbstractValueConverter getValueConverter() {
     return new CompositeValueConverter();
   }
 
-  private class CompositeValueConverter extends AbstractValueConverter
-  {
+  private class CompositeValueConverter extends AbstractValueConverter {
 
     @Override
-    public Object toOpenDataValue(Object javaValue) throws MBeanException
-    {
-      if (javaValue == null)
-      {
+    public Object toOpenDataValue(Object javaValue) throws MBeanException {
+      if (javaValue == null) {
         return null;
       }
       Map<String, Object> values = new HashMap<String, Object>();
-      for (DynamicMItem item : items.values())
-      {
+      for (DynamicMItem item : items.values()) {
         values.put(item.getName(), item.getValue(javaValue));
       }
-      try
-      {
-        return new CompositeDataSupport((CompositeType)openType, values);
-      }
-      catch(OpenDataException ex)
-      {
+      try {
+        return new CompositeDataSupport((CompositeType) openType, values);
+      } catch (OpenDataException ex) {
         throw new MBeanException(ex);
       }
     }
 
     @Override
-    public Object toJavaValue(Object openDataValue) throws MBeanException
-    {
+    public Object toJavaValue(Object openDataValue) throws MBeanException {
       throw new MBeanException(new IllegalStateException("Not supported"));
     }
 

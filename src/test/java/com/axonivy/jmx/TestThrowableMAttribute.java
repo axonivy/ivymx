@@ -14,32 +14,26 @@ import javax.management.openmbean.CompositeData;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.Test;
 
-public class TestThrowableMAttribute extends BaseMTest<TestThrowableMAttribute.TestBean>
-{
+public class TestThrowableMAttribute extends BaseMTest<TestThrowableMAttribute.TestBean> {
   @MBean("Test:type=TestType")
-  public static class TestBean
-  {
+  public static class TestBean {
     @MAttribute
     private Exception errorField;
 
     private Throwable errorMethod;
 
     @MAttribute
-    public Throwable getErrorMethod()
-    {
+    public Throwable getErrorMethod() {
       return errorMethod;
     }
   }
 
-
-  public TestThrowableMAttribute() throws MalformedObjectNameException
-  {
+  public TestThrowableMAttribute() throws MalformedObjectNameException {
     super(new TestBean(), "Test:type=TestType");
   }
 
   @Test
-  public void testAttributeInfoErrorField() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testAttributeInfoErrorField() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("errorField");
     assertThat(attributeInfo.getDescription()).isEqualTo("errorField");
     assertThat(attributeInfo.getType()).isEqualTo(CompositeData.class.getName());
@@ -49,8 +43,7 @@ public class TestThrowableMAttribute extends BaseMTest<TestThrowableMAttribute.T
   }
 
   @Test
-  public void testReadAttributeErrorField() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeErrorField() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.errorField = null;
     assertThat(getAttribute("errorField")).isNull();
     testBean.errorField = new RuntimeException("Gugus");
@@ -58,15 +51,14 @@ public class TestThrowableMAttribute extends BaseMTest<TestThrowableMAttribute.T
     assertThat(value).isNotNull();
     assertThat(value).isInstanceOf(CompositeData.class);
 
-    CompositeData error = (CompositeData)value;
+    CompositeData error = (CompositeData) value;
     assertThat(error.get("message")).isEqualTo("Gugus");
     assertThat(error.get("type")).isEqualTo(RuntimeException.class.getName());
     assertThat(error.get("stackTrace")).isEqualTo(ExceptionUtils.getStackTrace(testBean.errorField));
   }
 
   @Test
-  public void testAttributeInfoErrorMethod() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testAttributeInfoErrorMethod() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("errorMethod");
     assertThat(attributeInfo.getDescription()).isEqualTo("errorMethod");
     assertThat(attributeInfo.getType()).isEqualTo(CompositeData.class.getName());
@@ -76,8 +68,7 @@ public class TestThrowableMAttribute extends BaseMTest<TestThrowableMAttribute.T
   }
 
   @Test
-  public void testReadAttributeErrorMethod() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeErrorMethod() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.errorMethod = null;
     assertThat(getAttribute("errorMethod")).isNull();
     testBean.errorMethod = new RuntimeException("Gugus");
@@ -85,7 +76,7 @@ public class TestThrowableMAttribute extends BaseMTest<TestThrowableMAttribute.T
     assertThat(value).isNotNull();
     assertThat(value).isInstanceOf(CompositeData.class);
 
-    CompositeData error = (CompositeData)value;
+    CompositeData error = (CompositeData) value;
     assertThat(error.get("message")).isEqualTo("Gugus");
     assertThat(error.get("type")).isEqualTo(RuntimeException.class.getName());
     assertThat(error.get("stackTrace")).isEqualTo(ExceptionUtils.getStackTrace(testBean.errorMethod));

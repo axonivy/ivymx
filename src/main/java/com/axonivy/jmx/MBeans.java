@@ -13,27 +13,20 @@ import com.axonivy.jmx.internal.MBeanManager;
  * {@code @MBean}("GettingStarted:name=Person")
  * public class Person
  * {
- *   public static void main(String[] args)
- *   {
- *     Person person = new Person();
- *     MBeans.registerMBeanFor(person);
- *   }
+ * public static void main(String[] args)
+ * {
+ * Person person = new Person();
+ * MBeans.registerMBeanFor(person);
+ * }
  * }
  * </pre>
  */
-public class MBeans
-{
+public class MBeans {
   private static MBeanManager manager = MBeanManager.getInstance();
 
-  /**
-   * Constructor
-   */
-  private MBeans()
-  {
-  }
+  private MBeans() {}
 
-  public static void registerMBeanFor(Object object)
-  {
+  public static void registerMBeanFor(Object object) {
     manager.registerMBeanFor(object);
   }
 
@@ -43,24 +36,19 @@ public class MBeans
    * @see #isMBean(Object)
    * @see #registerMBeanFor(Object)
    */
-  public static void registerMBeansFor(Collection<? extends Object> objects)
-  {
+  public static void registerMBeansFor(Collection<? extends Object> objects) {
     manager.registerMBeansFor(objects);
   }
 
-
-  public static boolean isMBean(Object object)
-  {
+  public static boolean isMBean(Object object) {
     return manager.isMBean(object);
   }
 
-  public static MBeanServer getMBeanServer()
-  {
+  public static MBeanServer getMBeanServer() {
     return manager.getMBeanServer();
   }
 
-  public static void unregisterMBeanFor(Object object)
-  {
+  public static void unregisterMBeanFor(Object object) {
     manager.unregisterMBeanFor(object);
   }
 
@@ -70,13 +58,11 @@ public class MBeans
    * @see #isMBean(Object)
    * @see #unregisterMBeanFor(Object)
    */
-  public static void unregisterMBeansFor(Collection<? extends Object> objects)
-  {
+  public static void unregisterMBeansFor(Collection<? extends Object> objects) {
     manager.unregisterMBeansFor(objects);
   }
 
-  public static void unregisterAllMBeans()
-  {
+  public static void unregisterAllMBeans() {
     manager.unregisterAllMBeans();
   }
 
@@ -85,18 +71,15 @@ public class MBeans
    * are executed within the given execution context. This can be used to ensure the methods are called in the right security context for example.
    * @param executionContext the execution context to add
    */
-  public static void addExecutionContext(IExecutionContext executionContext)
-  {
+  public static void addExecutionContext(IExecutionContext executionContext) {
     manager.addExecutionContext(executionContext);
   }
 
-  public static void removeExecutionContext(IExecutionContext executionContext)
-  {
+  public static void removeExecutionContext(IExecutionContext executionContext) {
     manager.removeExecutionContext(executionContext);
   }
 
-  public static void setRegisterMBeanErrorStrategy(IRegisterMBeanErrorStrategy strategy)
-  {
+  public static void setRegisterMBeanErrorStrategy(IRegisterMBeanErrorStrategy strategy) {
     manager.setRegisterMBeanErrorStrategy(strategy);
   }
 }

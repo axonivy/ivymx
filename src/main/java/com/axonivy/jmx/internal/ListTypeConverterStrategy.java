@@ -13,98 +13,78 @@ import javax.management.openmbean.OpenType;
 
 import com.axonivy.jmx.MException;
 
-
 /**
  * Strategy to convert {@link java.util.List} objects to arrays.
  * @author rwei
  * @since 01.07.2013
  */
-class ListTypeConverterStrategy implements OpenTypeConverterStrategy
-{
+class ListTypeConverterStrategy implements OpenTypeConverterStrategy {
   private MBeanManager manager;
 
-  ListTypeConverterStrategy(MBeanManager manager)
-  {
+  ListTypeConverterStrategy(MBeanManager manager) {
     this.manager = manager;
   }
 
   @Override
-  public boolean canHandle(Type type)
-  {
-    if (type instanceof ParameterizedType)
-    {
-      type = ((ParameterizedType)type).getRawType();
-      return type instanceof Class<?> && List.class.isAssignableFrom((Class<?>)type);
+  public boolean canHandle(Type type) {
+    if (type instanceof ParameterizedType) {
+      type = ((ParameterizedType) type).getRawType();
+      return type instanceof Class<?> && List.class.isAssignableFrom((Class<?>) type);
     }
     return false;
   }
 
   @Override
-  public OpenType<?> toOpenType(Type type)
-  {
-    try
-    {
+  public OpenType<?> toOpenType(Type type) {
+    try {
       Type contentType = getContentType(type);
       return new ArrayType<CompositeType>(1, manager.toOpenType(contentType));
-    }
-    catch (OpenDataException ex)
-    {
+    } catch (OpenDataException ex) {
       throw new MException(ex);
     }
   }
 
-  private Type getContentType(Type type)
-  {
-    return ((ParameterizedType)type).getActualTypeArguments()[0];
+  private Type getContentType(Type type) {
+    return ((ParameterizedType) type).getActualTypeArguments()[0];
   }
 
   @Override
-  public AbstractValueConverter getValueConverter(Type type)
-  {
-    try
-    {
+  public AbstractValueConverter getValueConverter(Type type) {
+    try {
       Type contentType = getContentType(type);
       OpenType<?> contentOpenType = manager.toOpenType(contentType);
       Class<?> contentOpenClass = Class.forName(contentOpenType.getClassName());
       return new List2ArrayConverter(contentOpenClass, manager.getValueConverter(contentType));
-    }
-    catch (ClassNotFoundException ex)
-    {
+    } catch (ClassNotFoundException ex) {
       throw new MException(ex);
     }
   }
 
-  private static class List2ArrayConverter extends AbstractValueConverter
-  {
+  private static class List2ArrayConverter extends AbstractValueConverter {
     private Class<?> contentOpenClass;
     private AbstractValueConverter contentValueConverter;
 
-    public List2ArrayConverter(Class<?> contentOpenClass, AbstractValueConverter contentValueConverter)
-    {
+    public List2ArrayConverter(Class<?> contentOpenClass, AbstractValueConverter contentValueConverter) {
       this.contentOpenClass = contentOpenClass;
       this.contentValueConverter = contentValueConverter;
     }
 
     @Override
-    public Object toOpenDataValue(Object javaValue) throws MBeanException
-    {
-      if (javaValue == null)
-      {
+    public Object toOpenDataValue(Object javaValue) throws MBeanException {
+      if (javaValue == null) {
         return null;
       }
-      List<?> list = (List<?>)javaValue;
-      Object[] openData = (Object[])Array.newInstance(contentOpenClass, list.size());
-      int pos=0;
-      for (Object value : list)
-      {
+      List<?> list = (List<?>) javaValue;
+      Object[] openData = (Object[]) Array.newInstance(contentOpenClass, list.size());
+      int pos = 0;
+      for (Object value : list) {
         openData[pos++] = contentValueConverter.toOpenDataValue(value);
       }
       return openData;
     }
 
     @Override
-    public Object toJavaValue(Object openDataValue) throws MBeanException
-    {
+    public Object toJavaValue(Object openDataValue) throws MBeanException {
       throw new MBeanException(new IllegalStateException("Not supported"));
     }
 

@@ -13,21 +13,21 @@ import java.lang.annotation.Target;
  * {@code @MBean}
  * public class MyBean
  * {
- *   {@code @MAttribute}
- *   private String myAttribute;
+ * {@code @MAttribute}
+ * private String myAttribute;
  *
- *   private int count;
+ * private int count;
  *
- *   {@code @MAttribute(name="counter", description="My first counter", writable=true)}
- *   private int getCount()
- *   {
- *     return count;
- *   }
+ * {@code @MAttribute(name="counter", description="My first counter", writable=true)}
+ * private int getCount()
+ * {
+ * return count;
+ * }
  *
- *   private void setCount(int count)
- *   {
- *     this.count=count;
- *   }
+ * private void setCount(int count)
+ * {
+ * this.count=count;
+ * }
  * }</pre>
  * <p>
  * The bean provides a read only attribute {@code myAttribute} and a writable attribute {@code counter} with the description "My first counter".</p>
@@ -37,32 +37,31 @@ import java.lang.annotation.Target;
  *
  * <p>Example:</p>
  * <pre>
- *  {@code @MBean}(value="Test:type=TestType")
- *  public class TestBean
- *  {
- *    {@code @MInclude}
- *    private Counter errors = new Counter("errors");
- *  }
+ * {@code @MBean}(value="Test:type=TestType")
+ * public class TestBean
+ * {
+ * {@code @MInclude}
+ * private Counter errors = new Counter("errors");
+ * }
  *
- *  public static class Counter
- *  {
- *    {@code @MAttribute}(name="#{name}", description="All #{name} that were occured")
- *    private int cnt=0;
+ * public static class Counter
+ * {
+ * {@code @MAttribute}(name="#{name}", description="All #{name} that were occured")
+ * private int cnt=0;
  *
- *    private String name;
+ * private String name;
  *
- *    public Counter(String name)
- *    {
- *      this.name = name;
- *    }
- *  }
+ * public Counter(String name)
+ * {
+ * this.name = name;
+ * }
+ * }
  * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Inherited
-public @interface MAttribute
-{
+public @interface MAttribute {
   String description() default "";
 
   String name() default "";

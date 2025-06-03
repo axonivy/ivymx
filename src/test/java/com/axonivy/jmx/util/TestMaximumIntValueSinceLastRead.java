@@ -13,31 +13,26 @@ import com.axonivy.jmx.MInclude;
 /**
  * Test class {@link MaximumIntValueSinceLastRead}
  */
-public class TestMaximumIntValueSinceLastRead extends BaseMTest<TestMaximumIntValueSinceLastRead.TestBean>
-{
-  @MBean(value="Test:type=TestType")
-  public static class TestBean
-  {
+public class TestMaximumIntValueSinceLastRead extends BaseMTest<TestMaximumIntValueSinceLastRead.TestBean> {
+  @MBean(value = "Test:type=TestType")
+  public static class TestBean {
     @MInclude
-    private MaximumIntValueSinceLastRead maxValue = new MaximumIntValueSinceLastRead("maxValue");
+    private final MaximumIntValueSinceLastRead maxValue = new MaximumIntValueSinceLastRead("maxValue");
   }
-  
-  public TestMaximumIntValueSinceLastRead() throws Exception
-  {
+
+  public TestMaximumIntValueSinceLastRead() throws Exception {
     super(new TestBean(), "Test:type=TestType");
   }
-  
+
   @Test
-  public void testMetaInfo() throws Exception
-  {
+  public void testMetaInfo() throws Exception {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("maxValue");
     assertThat(attributeInfo.getName()).isEqualTo("maxValue");
     assertThat(attributeInfo.getType()).isEqualTo(Integer.class.getName());
-  }  
-  
+  }
+
   @Test
-  public void testResetMaximumValue() throws Exception
-  {
+  public void testResetMaximumValue() throws Exception {
     assertThat(getAttribute("maxValue")).isEqualTo(0);
     testBean.maxValue.addValue(100);
     assertThat(getAttribute("maxValue")).isEqualTo(100);
@@ -46,8 +41,7 @@ public class TestMaximumIntValueSinceLastRead extends BaseMTest<TestMaximumIntVa
   }
 
   @Test
-  public void testMaximumValue() throws Exception
-  {
+  public void testMaximumValue() throws Exception {
     assertThat(getAttribute("maxValue")).isEqualTo(0);
     testBean.maxValue.addValue(10);
     testBean.maxValue.addValue(100);
@@ -55,10 +49,9 @@ public class TestMaximumIntValueSinceLastRead extends BaseMTest<TestMaximumIntVa
     testBean.maxValue.addValue(20);
     assertThat(getAttribute("maxValue")).isEqualTo(100);
   }
-  
+
   @Test
-  public void testReturnsLastValueIfNoValueWasAdded() throws Exception
-  {
+  public void testReturnsLastValueIfNoValueWasAdded() throws Exception {
     assertThat(getAttribute("maxValue")).isEqualTo(0);
     testBean.maxValue.addValue(100);
     testBean.maxValue.addValue(20);
