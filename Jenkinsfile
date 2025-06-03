@@ -15,27 +15,48 @@ pipeline {
     choice(name: 'deployProfile',
       description: 'Choose where the built plugin should be deployed to',
       choices: ['central.snapshots', 'maven.central.release'])
-
-    string(name: 'revision',
-      description: 'Revision for this release, e.g. newest version "1.3.0" revision should be "1" (-> 1.3.1). Note: This is only used for release target!',
-      defaultValue: '0' )
   }
 
   stages {
     stage('build') {
       steps {
         script {
+          def targetBranch = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+          def officialRelease = params.deployProfile == 'maven.central.release';
+          
+          if (officialRelease) {
+            sh "git config --global user.name 'ivy-team'"
+            sh "git config --global user.email 'info@ivyteam.ch'"
+            
+            sh "git checkout -b ${targetBranch}"
+            sh "git tag -l | xargs git tag -d"
+            
+            def releasedVersion = version('-DremoveSnapshot=true')
+            sh "git add . ;git commit -m 'update versions for release ${releasedVersion}'"
+            sh "git tag \"v${releasedVersion}\" -a -m \"Official release ${releasedVersion}\""
+          }
+          
           withCredentials([string(credentialsId: 'gpg.password.axonivy', variable: 'GPG_PWD'), file(credentialsId: 'gpg.keystore.axonivy', variable: 'GPG_FILE')]) {
             sh "gpg --batch --import ${env.GPG_FILE}"
             def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            def mavenProps = ""
-            if (params.deployProfile == 'maven.central.release') {
-              mavenProps = "-Drevision=${params.revision}" 
+            def mavenProps = "-Dgpg.passphrase='${env.GPG_PWD}' ";
+            if (officialRelease) {
+              mavenProps += "-P ${params.deployProfile} -DautoRelease=false"
             }
-            maven cmd: "clean ${phase} " +
-              "-P ${params.deployProfile} " +
-              "-Dgpg.passphrase='${env.GPG_PWD}' " +
-              "${mavenProps}"
+            maven cmd: "clean ${phase} ${mavenProps}"
+            currentBuild.description = "<a href='https://central.sonatype.com/publishing/deployments'>deployments</a>"
+          }
+          
+          if (officialRelease) {
+            def nextVersion=version('-DnextSnapshot=true')
+            sh "git add . ;git commit -m 'prepare next dev-cycle ${nextVersion}'"
+            
+            withEnv(['GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=no']) {
+              sshagent(credentials: ['github-axonivy']) {
+                sh "git push origin --tags"
+                sh "git push -u origin ${targetBranch}"
+              }
+            }
           }
         }
 
@@ -46,4 +67,12 @@ pipeline {
       }
     }
   }
+  
+}
+
+def version(def param) {
+  sh "mvn org.codehaus.mojo:versions-maven-plugin:2.18.0:set ${param} | grep '\\[.*' "
+  def evalCmd='mvn help:evaluate -Dexpression=\'project.version\' -q -DforceStdout'
+  def current = sh(script: evalCmd, returnStdout: true)
+  return current;
 }
