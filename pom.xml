@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.axonivy</groupId>
   <artifactId>ivymx</artifactId>
-  <version>1.2.${revision}</version>
+  <version>1.2.5-SNAPSHOT</version>
 
   <name>IVYMX - AXON IVY Java Management Extension</name>
   <description>Annotations and utility classes to register POJO's as JMX MBeans.</description>
@@ -34,7 +34,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <revision>5-SNAPSHOT</revision>
     <skip.gpg>true</skip.gpg>
     <log4j.version>2.24.3</log4j.version>
     <slf4j.version>2.0.17</slf4j.version>
