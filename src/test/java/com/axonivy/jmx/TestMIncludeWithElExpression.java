@@ -16,12 +16,10 @@ import org.junit.Test;
 
 import com.axonivy.jmx.MOperation.Impact;
 
-public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElExpression.TestBean>
-{
+public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElExpression.TestBean> {
 
-  @MBean(value="Test:type=TestType")
-  public static class TestBean
-  {
+  @MBean(value = "Test:type=TestType")
+  public static class TestBean {
     @MInclude
     private final Counter errors = new Counter("errors");
 
@@ -29,44 +27,36 @@ public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElEx
     private final Counter requests = new Counter("requests");
   }
 
-  public static class Counter
-  {
-    @MAttribute(name="#{name}", description="All #{name} that were occured")
-    private int cnt=0;
+  public static class Counter {
+    @MAttribute(name = "#{name}", description = "All #{name} that were occured")
+    private int cnt = 0;
 
     private final String name;
 
-    public Counter(String name)
-    {
+    public Counter(String name) {
       this.name = name;
     }
 
-    public String getName()
-    {
+    public String getName() {
       return name;
     }
 
-    public String getCapitalizedName()
-    {
+    public String getCapitalizedName() {
       return StringUtils.capitalize(name);
     }
 
-    @MOperation(name="reset#{capitalizedName}", description="Resets the #{name} counter")
-    public void resetCnt()
-    {
+    @MOperation(name = "reset#{capitalizedName}", description = "Resets the #{name} counter")
+    public void resetCnt() {
       cnt = 0;
     }
   }
 
-
-  public TestMIncludeWithElExpression() throws MalformedObjectNameException
-  {
+  public TestMIncludeWithElExpression() throws MalformedObjectNameException {
     super(new TestBean(), "Test:type=TestType");
   }
 
   @Test
-  public void testErrorsAttributeInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testErrorsAttributeInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("errors");
     assertThat(attributeInfo.getName()).isEqualTo("errors");
     assertThat(attributeInfo.getDescription()).isEqualTo("All errors that were occured");
@@ -77,8 +67,7 @@ public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElEx
   }
 
   @Test
-  public void testResetErrorsOperationInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testResetErrorsOperationInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanOperationInfo operationInfo = getOperationInfo("resetErrors");
     assertThat(operationInfo.getName()).isEqualTo("resetErrors");
     assertThat(operationInfo.getDescription()).isEqualTo("Resets the errors counter");
@@ -88,24 +77,20 @@ public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElEx
   }
 
   @Test
-  public void testReadErrorsAttribute() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
-    testBean.errors.cnt=45;
+  public void testReadErrorsAttribute() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
+    testBean.errors.cnt = 45;
     assertThat(getAttribute("errors")).isEqualTo(45);
   }
 
-
   @Test
-  public void testInvokeResetErrorsOperation() throws InstanceNotFoundException, ReflectionException, MBeanException
-  {
-    testBean.errors.cnt=11;
+  public void testInvokeResetErrorsOperation() throws InstanceNotFoundException, ReflectionException, MBeanException {
+    testBean.errors.cnt = 11;
     invokeOperation("resetErrors");
     assertThat(testBean.errors.cnt).isEqualTo(0);
   }
 
   @Test
-  public void testRequestsAttributeInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testRequestsAttributeInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("requests");
     assertThat(attributeInfo.getName()).isEqualTo("requests");
     assertThat(attributeInfo.getDescription()).isEqualTo("All requests that were occured");
@@ -116,8 +101,7 @@ public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElEx
   }
 
   @Test
-  public void testResetRequestsOperationInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException
-  {
+  public void testResetRequestsOperationInfo() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanOperationInfo operationInfo = getOperationInfo("resetRequests");
     assertThat(operationInfo.getName()).isEqualTo("resetRequests");
     assertThat(operationInfo.getDescription()).isEqualTo("Resets the requests counter");
@@ -127,17 +111,14 @@ public class TestMIncludeWithElExpression extends BaseMTest<TestMIncludeWithElEx
   }
 
   @Test
-  public void testReadRequestsAttribute() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
-    testBean.requests.cnt=46;
+  public void testReadRequestsAttribute() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
+    testBean.requests.cnt = 46;
     assertThat(getAttribute("requests")).isEqualTo(46);
   }
 
-
   @Test
-  public void testInvokeResetRequestsOperation() throws InstanceNotFoundException, ReflectionException, MBeanException
-  {
-    testBean.requests.cnt=12;
+  public void testInvokeResetRequestsOperation() throws InstanceNotFoundException, ReflectionException, MBeanException {
+    testBean.requests.cnt = 12;
     invokeOperation("resetRequests");
     assertThat(testBean.requests.cnt).isEqualTo(0);
   }

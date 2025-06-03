@@ -9,8 +9,7 @@ import javax.management.openmbean.OpenType;
  * @author rwei
  * @since 01.07.2013
  */
-interface OpenTypeConverterStrategy
-{
+interface OpenTypeConverterStrategy {
   /**
    * @param type type
    * @return true if the strategy can convert the given type to a {@link OpenType}.

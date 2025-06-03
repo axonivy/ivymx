@@ -23,8 +23,7 @@ import com.axonivy.jmx.MException;
  * @author rwei
  * @since 01.07.2013
  */
-class MBeanProxy implements DynamicMBean
-{
+class MBeanProxy implements DynamicMBean {
   private static final Logger LOGGER = LoggerFactory.getLogger(MBeanProxy.class);
   private Object originalObject;
   private ObjectName objectName;
@@ -35,65 +34,49 @@ class MBeanProxy implements DynamicMBean
   private List<MCompositionReferenceValue> compositionReferences;
   private MBeanInstanceInfo mBeanInstanceInfo;
 
-  MBeanProxy(MBeanType mBeanType, Object originalObject, ObjectName parentName)
-  {
+  MBeanProxy(MBeanType mBeanType, Object originalObject, ObjectName parentName) {
     this.mBeanType = mBeanType;
     this.originalObject = originalObject;
     this.parentName = parentName;
   }
 
-  ObjectName getObjectName()
-  {
-    if (uniqueObjectName != null)
-    {
+  ObjectName getObjectName() {
+    if (uniqueObjectName != null) {
       return uniqueObjectName;
     }
     return getSpecifiedObjectName();
   }
 
-  private ObjectName getSpecifiedObjectName()
-  {
-    if (objectName == null)
-    {
+  private ObjectName getSpecifiedObjectName() {
+    if (objectName == null) {
       String objectNameStr = mBeanType.evaluateName(originalObject);
-      if (parentName != null)
-      {
-        objectNameStr = parentName.toString()+","+objectNameStr;
+      if (parentName != null) {
+        objectNameStr = parentName.toString() + "," + objectNameStr;
       }
-      try
-      {
+      try {
         objectName = new ObjectName(objectNameStr);
-      }
-      catch (MalformedObjectNameException ex)
-      {
-        throw new IllegalArgumentException("Object name of MBean '"+objectNameStr+"'is malformed", ex);
+      } catch (MalformedObjectNameException ex) {
+        throw new IllegalArgumentException("Object name of MBean '" + objectNameStr + "'is malformed", ex);
       }
     }
     return objectName;
   }
 
-  boolean makeUniqueName()
-  {
+  boolean makeUniqueName() {
     return mBeanType.makeUniqueName();
   }
 
-  ObjectName getNextPossibleUniqueObjectName()
-  {
-    try
-    {
-      uniqueObjectName = new ObjectName(getSpecifiedObjectName().toString()+" @"+uniqueId ++);
+  ObjectName getNextPossibleUniqueObjectName() {
+    try {
+      uniqueObjectName = new ObjectName(getSpecifiedObjectName().toString() + " @" + uniqueId++);
       return uniqueObjectName;
-    }
-    catch(MalformedObjectNameException ex)
-    {
+    } catch (MalformedObjectNameException ex) {
       throw new MException(ex);
     }
   }
 
-  List<MCompositionReferenceValue> getCompositionReferences()
-  {
-    if (compositionReferences == null)
-    {
+  List<MCompositionReferenceValue> getCompositionReferences() {
+    if (compositionReferences == null) {
       compositionReferences = mBeanType.getCompositionReferences(originalObject);
     }
     return compositionReferences;
@@ -104,8 +87,7 @@ class MBeanProxy implements DynamicMBean
    */
   @Override
   public Object getAttribute(String attribute) throws AttributeNotFoundException, MBeanException,
-          ReflectionException
-  {
+      ReflectionException {
     DynamicMAttribute dynamicAttribute = getMBeanInstanceInfo().getAttribute(attribute);
     return dynamicAttribute.getValue(originalObject);
   }
@@ -115,15 +97,12 @@ class MBeanProxy implements DynamicMBean
    */
   @Override
   public void setAttribute(Attribute attribute) throws AttributeNotFoundException,
-          InvalidAttributeValueException, MBeanException, ReflectionException
-  {
+      InvalidAttributeValueException, MBeanException, ReflectionException {
     DynamicMAttribute dynamicAttribute = getMBeanInstanceInfo().getAttribute(attribute.getName());
-    if (!dynamicAttribute.isWritable())
-    {
-      throw new MBeanException(new IllegalAccessException("Jmx attribute '"+attribute.getName()+"' can not be set because it is not writable"));
+    if (!dynamicAttribute.isWritable()) {
+      throw new MBeanException(new IllegalAccessException("Jmx attribute '" + attribute.getName() + "' can not be set because it is not writable"));
     }
-    if (LOGGER.isInfoEnabled())
-    {
+    if (LOGGER.isInfoEnabled()) {
       LOGGER.info("Attribute ''{0}'' of MBean ''{1}'' set to new value ''{2}''.", attribute.getName(), objectName, attribute.getValue());
     }
     dynamicAttribute.setValue(originalObject, attribute.getValue());
@@ -133,20 +112,15 @@ class MBeanProxy implements DynamicMBean
    * @see javax.management.DynamicMBean#getAttributes(java.lang.String[])
    */
   @Override
-  public AttributeList getAttributes(String[] attributeNames)
-  {
+  public AttributeList getAttributes(String[] attributeNames) {
     AttributeList readAttributes = new AttributeList();
-    for (String name: attributeNames)
-    {
+    for (String name : attributeNames) {
       Object value;
-      try
-      {
+      try {
         value = getAttribute(name);
         readAttributes.add(new Attribute(name, value));
-      }
-      catch (Exception ex)
-      {
-        LOGGER.warn("Could not read attribute with name '"+name+"'", ex);
+      } catch (Exception ex) {
+        LOGGER.warn("Could not read attribute with name '" + name + "'", ex);
       }
     }
     return readAttributes;
@@ -156,19 +130,14 @@ class MBeanProxy implements DynamicMBean
    * @see javax.management.DynamicMBean#setAttributes(javax.management.AttributeList)
    */
   @Override
-  public AttributeList setAttributes(AttributeList attributes)
-  {
+  public AttributeList setAttributes(AttributeList attributes) {
     AttributeList writtenAttributes = new AttributeList();
-    for (Attribute attribute : attributes.asList())
-    {
-      try
-      {
+    for (Attribute attribute : attributes.asList()) {
+      try {
         setAttribute(attribute);
         writtenAttributes.add(attribute);
-      }
-      catch(Exception ex)
-      {
-        LOGGER.warn("Could not set attribute with name '"+attribute.getName()+"' to value '"+attribute.getValue()+"'", ex);
+      } catch (Exception ex) {
+        LOGGER.warn("Could not set attribute with name '" + attribute.getName() + "' to value '" + attribute.getValue() + "'", ex);
       }
     }
     return writtenAttributes;
@@ -179,11 +148,9 @@ class MBeanProxy implements DynamicMBean
    */
   @Override
   public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException,
-          ReflectionException
-  {
+      ReflectionException {
     MethodBasedMOperation operation = getMBeanInstanceInfo().getOperation(actionName, signature);
-    if (LOGGER.isInfoEnabled())
-    {
+    if (LOGGER.isInfoEnabled()) {
       LOGGER.info("Operation ''{0}'' invoked on MBean ''{1}''", MethodBasedMOperation.buildSignature(actionName, signature), objectName);
     }
     return operation.invoke(originalObject, params);
@@ -193,15 +160,12 @@ class MBeanProxy implements DynamicMBean
    * @see javax.management.DynamicMBean#getMBeanInfo()
    */
   @Override
-  public MBeanInfo getMBeanInfo()
-  {
+  public MBeanInfo getMBeanInfo() {
     return getMBeanInstanceInfo().getMBeanInfo();
   }
 
-  private MBeanInstanceInfo getMBeanInstanceInfo()
-  {
-    if (mBeanInstanceInfo == null)
-    {
+  private MBeanInstanceInfo getMBeanInstanceInfo() {
+    if (mBeanInstanceInfo == null) {
       mBeanInstanceInfo = mBeanType.getMBeanInstanceInfo(originalObject);
     }
     return mBeanInstanceInfo;

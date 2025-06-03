@@ -1,16 +1,16 @@
 package com.axonivy.jmx;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
+
 import com.axonivy.jmx.util.EventCounter;
 
-public class TestEventCounter
-{
-  private EventCounter testCounter = new EventCounter("TestCounter");
+public class TestEventCounter {
+  private final EventCounter testCounter = new EventCounter("TestCounter");
 
   @Test
-  public void testCounter()
-  {
+  public void testCounter() {
     assertThat(testCounter.getCount()).isEqualTo(0L);
     testCounter.increase();
     assertThat(testCounter.getCount()).isEqualTo(1L);
@@ -24,8 +24,7 @@ public class TestEventCounter
   }
 
   @Test
-  public void testIncrease()
-  {
+  public void testIncrease() {
     assertThat(testCounter.getCount()).isEqualTo(0L);
     testCounter.increase(5L);
     assertThat(testCounter.getCount()).isEqualTo(5L);

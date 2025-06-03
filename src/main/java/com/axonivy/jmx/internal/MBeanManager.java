@@ -25,8 +25,7 @@ import com.axonivy.jmx.MException;
  * @author rwei
  * @since 01.07.2013
  */
-public class MBeanManager
-{
+public class MBeanManager {
   private final ExecutionContextContainer executionContexts = new ExecutionContextContainer();
 
   private final ConcurrentHashMap<Object, MBeanProxy> proxyRegistry = new ConcurrentHashMap<Object, MBeanProxy>();
@@ -34,65 +33,53 @@ public class MBeanManager
   private final ConcurrentHashMap<Class<?>, MBeanType> mBeanTypes = new ConcurrentHashMap<Class<?>, MBeanType>();
 
   private final OpenTypeConverterStrategy[] openTypeConverterStrategies = {
-          new SimpleTypeConverterStrategy(),
-          new NewDateTimeApiConverterStrategy(),
-          new EnumTypeConverterStrategy(),
-          new ListTypeConverterStrategy(this),
-          new CompositeTypeConverterStrategy(this),
-          new UriTypeConverterStrategy(),
-          new MBeanConverterStrategy(this),
-          new ThrowableConverterStrategy(),
-          new PropertiesConverterStrategy()};
+      new SimpleTypeConverterStrategy(),
+      new NewDateTimeApiConverterStrategy(),
+      new EnumTypeConverterStrategy(),
+      new ListTypeConverterStrategy(this),
+      new CompositeTypeConverterStrategy(this),
+      new UriTypeConverterStrategy(),
+      new MBeanConverterStrategy(this),
+      new ThrowableConverterStrategy(),
+      new PropertiesConverterStrategy()};
 
   private IRegisterMBeanErrorStrategy registerErrorStrategy = MConstants.DEFAULT_ERROR_STRATEGY;
 
   private static final MBeanManager INSTANCE = new MBeanManager();
 
-  public static MBeanManager getInstance()
-  {
-	return INSTANCE;
+  public static MBeanManager getInstance() {
+    return INSTANCE;
   }
 
-  public void registerMBeanFor(Object object)
-  {
+  public void registerMBeanFor(Object object) {
     registerMBeanFor(object, null);
   }
 
-  public void registerMBeanFor(Object object, ObjectName parentName)
-  {
-    try
-    {
+  public void registerMBeanFor(Object object, ObjectName parentName) {
+    try {
       ensureMBeanProxyIsNotYetRegistered(object);
       MBeanType mBeanType = getMBeanTypeFor(object);
       MBeanProxy mBean = new MBeanProxy(mBeanType, object, parentName);
       registerMBean(mBean);
       registerMBeanProxy(object, mBean);
       registerCompositionMBeans(mBean);
-    }
-    catch(Throwable error)
-    {
+    } catch (Throwable error) {
       registerErrorStrategy.errorRegisteringMBean(object, error);
     }
   }
 
-  public void registerMBeansFor(Collection<? extends Object> objects)
-  {
-    for (Object object : objects)
-    {
-      if(isMBean(object))
-      {
+  public void registerMBeansFor(Collection<? extends Object> objects) {
+    for (Object object : objects) {
+      if (isMBean(object)) {
         registerMBeanFor(object);
       }
     }
   }
 
-  private void registerCompositionMBeans(MBeanProxy mBean)
-  {
-    for (MCompositionReferenceValue compositionReferenceValue : mBean.getCompositionReferences())
-    {
+  private void registerCompositionMBeans(MBeanProxy mBean) {
+    for (MCompositionReferenceValue compositionReferenceValue : mBean.getCompositionReferences()) {
       ObjectName parentName = null;
-      if (compositionReferenceValue.isConcatName())
-      {
+      if (compositionReferenceValue.isConcatName()) {
         parentName = mBean.getObjectName();
       }
       registerMBeanFor(compositionReferenceValue.getReferencedMBean(), parentName);
@@ -100,178 +87,136 @@ public class MBeanManager
   }
 
   private void registerMBean(MBeanProxy mBean) throws InstanceAlreadyExistsException,
-          MBeanRegistrationException, NotCompliantMBeanException
-  {
+      MBeanRegistrationException, NotCompliantMBeanException {
     ObjectName name = mBean.getObjectName();
-    if (mBean.makeUniqueName())
-    {
-      while (getMBeanServer().isRegistered(name))
-      {
+    if (mBean.makeUniqueName()) {
+      while (getMBeanServer().isRegistered(name)) {
         name = mBean.getNextPossibleUniqueObjectName();
       }
     }
     getMBeanServer().registerMBean(mBean, name);
   }
 
-  private void ensureMBeanProxyIsNotYetRegistered(Object object)
-  {
-    if (proxyRegistry.containsKey(object))
-    {
+  private void ensureMBeanProxyIsNotYetRegistered(Object object) {
+    if (proxyRegistry.containsKey(object)) {
       throw new IllegalArgumentException("MBean for parameter object is already registered");
     }
   }
 
-  private void registerMBeanProxy(Object object, MBeanProxy mBean)
-  {
-    if (proxyRegistry.putIfAbsent(object,  mBean) != null)
-    {
+  private void registerMBeanProxy(Object object, MBeanProxy mBean) {
+    if (proxyRegistry.putIfAbsent(object, mBean) != null) {
       throw new IllegalArgumentException("MBean for parameter object is already registered");
     }
   }
 
-  void ifAnnotatedRegisterMBeanFor(Object object)
-  {
-    if (isMBean(object))
-    {
+  void ifAnnotatedRegisterMBeanFor(Object object) {
+    if (isMBean(object)) {
       registerMBeanFor(object);
     }
   }
 
-  public boolean isMBean(Object object)
-  {
-    if (object == null)
-    {
+  public boolean isMBean(Object object) {
+    if (object == null) {
       return false;
     }
     return object.getClass().isAnnotationPresent(MBean.class);
   }
 
-  public MBeanServer getMBeanServer()
-  {
+  public MBeanServer getMBeanServer() {
     return ManagementFactory.getPlatformMBeanServer();
   }
 
-  public void unregisterMBeanFor(Object object)
-  {
+  public void unregisterMBeanFor(Object object) {
     MBeanProxy mBean = unregisterMBeanProxy(object);
-    if (mBean != null)
-    {
+    if (mBean != null) {
       unregisterMBean(mBean);
       unregisterCompositionMBeans(mBean);
     }
   }
 
-  public void unregisterMBeansFor(Collection<? extends Object> objects)
-  {
-    for(Object object : objects)
-    {
-      if (isMBean(object))
-      {
+  public void unregisterMBeansFor(Collection<? extends Object> objects) {
+    for (Object object : objects) {
+      if (isMBean(object)) {
         unregisterMBeanFor(object);
       }
     }
   }
 
-  private void unregisterCompositionMBeans(MBeanProxy mBean)
-  {
-    for (MCompositionReferenceValue compositionReferenceValue : mBean.getCompositionReferences())
-    {
+  private void unregisterCompositionMBeans(MBeanProxy mBean) {
+    for (MCompositionReferenceValue compositionReferenceValue : mBean.getCompositionReferences()) {
       unregisterMBeanFor(compositionReferenceValue.getReferencedMBean());
     }
   }
 
-  private void unregisterMBean(MBeanProxy mBean)
-  {
-    try
-    {
+  private void unregisterMBean(MBeanProxy mBean) {
+    try {
       getMBeanServer().unregisterMBean(mBean.getObjectName());
-    }
-    catch(InstanceNotFoundException ex)
-    {
+    } catch (InstanceNotFoundException ex) {
       // ignore
-    }
-    catch(Exception ex)
-    {
+    } catch (Exception ex) {
       throw new MException(ex);
     }
   }
 
-  private MBeanProxy unregisterMBeanProxy(Object object)
-  {
+  private MBeanProxy unregisterMBeanProxy(Object object) {
     return proxyRegistry.remove(object);
   }
 
-  void ifAnnotatedUnregisterMBeanFor(Object object)
-  {
-    if (isMBean(object))
-    {
+  void ifAnnotatedUnregisterMBeanFor(Object object) {
+    if (isMBean(object)) {
       unregisterMBeanFor(object);
     }
   }
 
-  public void unregisterAllMBeans()
-  {
-    for (Object object : proxyRegistry.keySet().toArray())
-    {
+  public void unregisterAllMBeans() {
+    for (Object object : proxyRegistry.keySet().toArray()) {
       unregisterMBeanFor(object);
     }
   }
 
-  public void addExecutionContext(IExecutionContext executionContext)
-  {
+  public void addExecutionContext(IExecutionContext executionContext) {
     executionContexts.addExecutionContext(executionContext);
   }
 
-  public void removeExecutionContext(IExecutionContext executionContext)
-  {
+  public void removeExecutionContext(IExecutionContext executionContext) {
     executionContexts.removeExecutionContext(executionContext);
   }
 
-  <T> T executeInContext(Callable<T> callable) throws Exception
-  {
+  <T> T executeInContext(Callable<T> callable) throws Exception {
     return executionContexts.executeInContext(callable);
   }
 
-  MBeanType getMBeanTypeFor(Object mBean)
-  {
+  MBeanType getMBeanTypeFor(Object mBean) {
     Class<?> mBeanClass = mBean.getClass();
     MBeanType mBeanType = mBeanTypes.get(mBeanClass);
-    if (mBeanType == null)
-    {
+    if (mBeanType == null) {
       mBeanType = new MBeanType(this, mBeanClass);
-      MBeanType alreadyDefined =  mBeanTypes.putIfAbsent(mBeanClass, mBeanType);
-      if (alreadyDefined != null)
-      {
+      MBeanType alreadyDefined = mBeanTypes.putIfAbsent(mBeanClass, mBeanType);
+      if (alreadyDefined != null) {
         mBeanType = alreadyDefined;
       }
     }
     return mBeanType;
   }
 
-  OpenType<?> toOpenType(Type type)
-  {
+  OpenType<?> toOpenType(Type type) {
     return getOpenTypeConverterStrategy(type).toOpenType(type);
   }
 
-  AbstractValueConverter getValueConverter(Type type)
-  {
+  AbstractValueConverter getValueConverter(Type type) {
     return getOpenTypeConverterStrategy(type).getValueConverter(type);
   }
 
-  private OpenTypeConverterStrategy getOpenTypeConverterStrategy(Type type)
-  {
-    for (OpenTypeConverterStrategy strategy : openTypeConverterStrategies)
-    {
-      if (strategy.canHandle(type))
-      {
+  private OpenTypeConverterStrategy getOpenTypeConverterStrategy(Type type) {
+    for (OpenTypeConverterStrategy strategy : openTypeConverterStrategies) {
+      if (strategy.canHandle(type)) {
         return strategy;
       }
     }
-    throw new IllegalArgumentException("Type '"+type+"' cannot be converted to a jmx open type. No strategy found.");
+    throw new IllegalArgumentException("Type '" + type + "' cannot be converted to a jmx open type. No strategy found.");
   }
 
-  public void setRegisterMBeanErrorStrategy(IRegisterMBeanErrorStrategy strategy)
-  {
+  public void setRegisterMBeanErrorStrategy(IRegisterMBeanErrorStrategy strategy) {
     registerErrorStrategy = strategy;
   }
 }

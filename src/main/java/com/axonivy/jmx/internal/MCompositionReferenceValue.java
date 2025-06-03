@@ -2,24 +2,20 @@ package com.axonivy.jmx.internal;
 
 import com.axonivy.jmx.MCompositionReference;
 
-class MCompositionReferenceValue
-{
+class MCompositionReferenceValue {
   private MCompositionReference annotation;
   private Object referencedMBean;
 
-  MCompositionReferenceValue(MCompositionReference annotation, Object referencedMBean)
-  {
+  MCompositionReferenceValue(MCompositionReference annotation, Object referencedMBean) {
     this.annotation = annotation;
     this.referencedMBean = referencedMBean;
   }
-  
-  Object getReferencedMBean()
-  {
+
+  Object getReferencedMBean() {
     return referencedMBean;
   }
-  
-  boolean isConcatName()
-  {
+
+  boolean isConcatName() {
     return annotation.concatName();
   }
 }

@@ -13,53 +13,43 @@ import com.axonivy.jmx.MComposite;
  * @author rwei
  * @since 01.07.2013
  */
-class CompositeTypeConverterStrategy implements OpenTypeConverterStrategy
-{
+class CompositeTypeConverterStrategy implements OpenTypeConverterStrategy {
   private ConcurrentHashMap<Class<?>, MCompositeType> mCompositeTypes = new ConcurrentHashMap<Class<?>, MCompositeType>();
   private MBeanManager manager;
 
-  CompositeTypeConverterStrategy(MBeanManager manager)
-  {
+  CompositeTypeConverterStrategy(MBeanManager manager) {
     this.manager = manager;
   }
 
   @Override
-  public boolean canHandle(Type type)
-  {
-    if (type instanceof Class)
-    {     
-      Class<?> clazz = (Class<?>)type;
+  public boolean canHandle(Type type) {
+    if (type instanceof Class) {
+      Class<?> clazz = (Class<?>) type;
       return clazz.isAnnotationPresent(MComposite.class);
     }
     return false;
   }
 
   @Override
-  public OpenType<?> toOpenType(Type type)
-  {
+  public OpenType<?> toOpenType(Type type) {
     return getMCompositeType(type).getOpenType();
   }
-  
-  private MCompositeType getMCompositeType(Type mCompositeClass)
-  {
-    Class<?> clazz = (Class<?>)mCompositeClass;
+
+  private MCompositeType getMCompositeType(Type mCompositeClass) {
+    Class<?> clazz = (Class<?>) mCompositeClass;
     MCompositeType mCompositeType = mCompositeTypes.get(clazz);
-    if (mCompositeType == null)
-    {
+    if (mCompositeType == null) {
       mCompositeType = new MCompositeType(manager, clazz);
       MCompositeType alreadyRegistered = mCompositeTypes.putIfAbsent(clazz, mCompositeType);
-      if (alreadyRegistered != null)
-      {
+      if (alreadyRegistered != null) {
         mCompositeType = alreadyRegistered;
       }
     }
     return mCompositeType;
   }
 
-
   @Override
-  public AbstractValueConverter getValueConverter(Type type)
-  {
+  public AbstractValueConverter getValueConverter(Type type) {
     return getMCompositeType(type).getValueConverter();
   }
 

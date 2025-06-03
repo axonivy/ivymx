@@ -16,50 +16,40 @@ import javax.management.ReflectionException;
 
 import org.junit.Test;
 
-public class TestUriConverter extends BaseMTest<TestUriConverter.TestBean>
-{
+public class TestUriConverter extends BaseMTest<TestUriConverter.TestBean> {
   private static URI TEST_URI2;
-  private static URI TEST_URI; 
+  private static URI TEST_URI;
 
-  static
-  {
-    try
-    {
+  static {
+    try {
       TEST_URI = new URI("http://localhost:8081/ivy");
       TEST_URI2 = new URI("ftp://ftp.soreco.ch/blah");
-    }
-    catch (URISyntaxException ex)
-    {
-    }
+    } catch (URISyntaxException ex) {}
   }
+
   @MBean("Test:type=TestType")
-  public static class TestBean
-  {
-    @MAttribute(isWritable=true)
+  public static class TestBean {
+    @MAttribute(isWritable = true)
     private URI uriField;
-    
+
     private URI uriMethod;
-    
-    @MAttribute(isWritable=true)
-    public URI getUriMethod()
-    {
+
+    @MAttribute(isWritable = true)
+    public URI getUriMethod() {
       return uriMethod;
     }
-    
-    public void setUriMethod(URI uriMethod)
-    {
+
+    public void setUriMethod(URI uriMethod) {
       this.uriMethod = uriMethod;
     }
   }
-  
-  public TestUriConverter() throws MalformedObjectNameException
-  {
+
+  public TestUriConverter() throws MalformedObjectNameException {
     super(new TestBean(), "Test:type=TestType");
   }
-  
+
   @Test
-  public void testAttributeInfoEnumField() throws IntrospectionException, InstanceNotFoundException, ReflectionException 
-  {
+  public void testAttributeInfoEnumField() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("uriField");
     assertThat(attributeInfo.getDescription()).isEqualTo("uriField");
     assertThat(attributeInfo.getType()).isEqualTo("java.lang.String");
@@ -67,10 +57,9 @@ public class TestUriConverter extends BaseMTest<TestUriConverter.TestBean>
     assertThat(attributeInfo.isWritable()).isEqualTo(true);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
   }
-  
+
   @Test
-  public void testReadAttributeEnumField() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeEnumField() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.uriField = TEST_URI;
     assertThat(getAttribute("uriField")).isEqualTo(TEST_URI.toString());
     testBean.uriField = TEST_URI2;
@@ -78,8 +67,7 @@ public class TestUriConverter extends BaseMTest<TestUriConverter.TestBean>
   }
 
   @Test
-  public void testWriteAttributeEnumField() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException
-  {
+  public void testWriteAttributeEnumField() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException {
     setAttribute("uriField", TEST_URI.toString());
     assertThat(testBean.uriField).isEqualTo(TEST_URI);
     setAttribute("uriField", TEST_URI2.toString());
@@ -87,8 +75,7 @@ public class TestUriConverter extends BaseMTest<TestUriConverter.TestBean>
   }
 
   @Test
-  public void testAttributeInfoEnumMethod() throws IntrospectionException, InstanceNotFoundException, ReflectionException 
-  {
+  public void testAttributeInfoEnumMethod() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("uriMethod");
     assertThat(attributeInfo.getDescription()).isEqualTo("uriMethod");
     assertThat(attributeInfo.getType()).isEqualTo("java.lang.String");
@@ -96,10 +83,9 @@ public class TestUriConverter extends BaseMTest<TestUriConverter.TestBean>
     assertThat(attributeInfo.isWritable()).isEqualTo(true);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
   }
-  
+
   @Test
-  public void testReadAttributeEnumMethod() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeEnumMethod() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.uriMethod = TEST_URI;
     assertThat(getAttribute("uriMethod")).isEqualTo(TEST_URI.toString());
     testBean.uriMethod = TEST_URI2;
@@ -107,13 +93,11 @@ public class TestUriConverter extends BaseMTest<TestUriConverter.TestBean>
   }
 
   @Test
-  public void testWriteAttributeEnumMethod() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException
-  {
+  public void testWriteAttributeEnumMethod() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException {
     setAttribute("uriMethod", TEST_URI.toString());
     assertThat(testBean.uriMethod).isEqualTo(TEST_URI);
     setAttribute("uriMethod", TEST_URI2.toString());
     assertThat(testBean.uriMethod).isEqualTo(TEST_URI2);
   }
-
 
 }

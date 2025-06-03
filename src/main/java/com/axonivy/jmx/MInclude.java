@@ -13,19 +13,19 @@ import java.lang.annotation.Target;
  * {@code @MBean}("bean:name=example")
  * class MyBean
  * {
- *   {@code @MInclude}
- *   private Aggregate aggregate = new Aggregate();
+ * {@code @MInclude}
+ * private Aggregate aggregate = new Aggregate();
  * }
  *
  * class Aggregate
  * {
- *   {@code @MAttribute}
- *   private int count;
+ * {@code @MAttribute}
+ * private int count;
  *
- *   {@code @MOperation}
- *   public void start()
- *   {
- *   }
+ * {@code @MOperation}
+ * public void start()
+ * {
+ * }
  * }
  * </pre>
  * The bean (bean:name=example) will provide an attribute {@code count} and an operation {@code start}.
@@ -34,10 +34,9 @@ import java.lang.annotation.Target;
  */
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.FIELD, ElementType.METHOD })
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Inherited
-public @interface MInclude
-{
+public @interface MInclude {
   /**
    * If no type is declared on a {@link MInclude} annotation the type of the field or the return type of the method the annotation is declared on
    * will be used to search for more annotations to include to the managed bean.

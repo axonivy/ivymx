@@ -15,13 +15,13 @@ import javax.management.MBeanOperationInfo;
  * {@code @MBean}
  * public class MyBean
  * {
- *   private int count;
+ * private int count;
  *
- *   {@code @MOperation}
- *   private void increaseCounter()
- *   {
- *     return count++;
- *   }
+ * {@code @MOperation}
+ * private void increaseCounter()
+ * {
+ * return count++;
+ * }
  * }</pre>
  * <p>This bean provides an operation {@code increaseCounter}</p>
  * <p>You can use EL expressions to dynamically resolve the name and description of the managed operation.<br>
@@ -30,57 +30,53 @@ import javax.management.MBeanOperationInfo;
  *
  * <p>Example:</p>
  * <pre>
- *  {@code @MBean}(value="Test:type=TestType")
- *  public class TestBean
- *  {
- *    {@code @MInclude}
- *    private Counter errors = new Counter("errors");
- *  }
+ * {@code @MBean}(value="Test:type=TestType")
+ * public class TestBean
+ * {
+ * {@code @MInclude}
+ * private Counter errors = new Counter("errors");
+ * }
  *
- *  public static class Counter
- *  {
- *    private int cnt=0;
+ * public static class Counter
+ * {
+ * private int cnt=0;
  *
- *    private String name;
+ * private String name;
  *
- *    public Counter(String name)
- *    {
- *      this.name = name;
- *    }
+ * public Counter(String name)
+ * {
+ * this.name = name;
+ * }
  *
- *    public String getCapitalizedName()
- *    {
- *      return StringUtils.capitalize(name);
- *    }
+ * public String getCapitalizedName()
+ * {
+ * return StringUtils.capitalize(name);
+ * }
  *
- *    {@code @MOperation}(name="reset#{capitalizedName}", description="Resets the #{name} counter")
- *    public void resetCnt()
- *    {
- *      cnt = 0;
- *    }
- *  }
+ * {@code @MOperation}(name="reset#{capitalizedName}", description="Resets the #{name} counter")
+ * public void resetCnt()
+ * {
+ * cnt = 0;
+ * }
+ * }
  * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.METHOD})
+@Target({ElementType.METHOD})
 @Inherited
-public @interface MOperation
-{
-  enum Impact
-  {
+public @interface MOperation {
+  enum Impact {
     INFO(MBeanOperationInfo.INFO),
     ACTION(MBeanOperationInfo.ACTION),
     ACTION_INFO(MBeanOperationInfo.ACTION_INFO),
     UNKNOWN(MBeanOperationInfo.UNKNOWN);
 
-    private int value;
-    private Impact(int value)
-    {
-      this.value=value;
+    private final int value;
+    Impact(int value) {
+      this.value = value;
     }
 
-    public int toInt()
-    {
+    public int toInt() {
       return value;
     }
   }

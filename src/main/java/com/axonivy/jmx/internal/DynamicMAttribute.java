@@ -11,16 +11,14 @@ import com.axonivy.jmx.MException;
  * @author rwei
  * @since 01.07.2013
  */
-class DynamicMAttribute
-{
+class DynamicMAttribute {
   private OpenMBeanAttributeInfo mBeanInfo;
   private AbstractValueAccessor valueAccessor;
   private Instruction nameInstruction;
   private Instruction descriptionInstruction;
   private AbstractValueAccessor targetAccessor;
 
-  DynamicMAttribute(AbstractValueAccessor valueAccessor, AbstractValueAccessor targetAccessor, OpenMBeanAttributeInfo mBeanInfo, Instruction nameInstruction, Instruction descriptionInstruction)
-  {
+  DynamicMAttribute(AbstractValueAccessor valueAccessor, AbstractValueAccessor targetAccessor, OpenMBeanAttributeInfo mBeanInfo, Instruction nameInstruction, Instruction descriptionInstruction) {
     this.valueAccessor = valueAccessor;
     this.targetAccessor = targetAccessor;
     this.mBeanInfo = mBeanInfo;
@@ -29,67 +27,53 @@ class DynamicMAttribute
 
   }
 
-  private OpenMBeanAttributeInfo evaluateInfo(Object mBean)
-  {
+  private OpenMBeanAttributeInfo evaluateInfo(Object mBean) {
     return new OpenMBeanAttributeInfoSupport(
-              evaluateName(mBean),
-              evaluateDescription(mBean),
-              mBeanInfo.getOpenType(),
-              mBeanInfo.isReadable(),
-              mBeanInfo.isWritable(),
-              mBeanInfo.isIs());
+        evaluateName(mBean),
+        evaluateDescription(mBean),
+        mBeanInfo.getOpenType(),
+        mBeanInfo.isReadable(),
+        mBeanInfo.isWritable(),
+        mBeanInfo.isIs());
   }
 
-  private String evaluateDescription(Object mBean)
-  {
-    try
-    {
+  private String evaluateDescription(Object mBean) {
+    try {
       Object target = targetAccessor.getValue(mBean);
       return descriptionInstruction.execute(target);
-    }
-    catch (MBeanException ex)
-    {
+    } catch (MBeanException ex) {
       throw new MException(ex);
     }
   }
 
-  private String evaluateName(Object mBean)
-  {
-    try
-    {
+  private String evaluateName(Object mBean) {
+    try {
       Object target = targetAccessor.getValue(mBean);
       return nameInstruction.execute(target);
-    }
-    catch (MBeanException ex)
-    {
+    } catch (MBeanException ex) {
       throw new MException(ex);
     }
   }
 
-  Object getValue(Object beanInstance) throws MBeanException
-  {
+  Object getValue(Object beanInstance) throws MBeanException {
     return valueAccessor.getValue(beanInstance);
   }
 
-  void setValue(Object beanInstance, Object openDataValue) throws MBeanException
-  {
+  void setValue(Object beanInstance, Object openDataValue) throws MBeanException {
     valueAccessor.setValue(beanInstance, openDataValue);
   }
 
-  void evaluate(Object mBean, MBeanInstanceInfo mBeanInstanceInfo)
-  {
+  void evaluate(Object mBean, MBeanInstanceInfo mBeanInstanceInfo) {
     mBeanInstanceInfo.addAttribute(this, evaluateInfo(mBean));
   }
 
-  boolean isWritable()
-  {
+  boolean isWritable() {
     return mBeanInfo.isWritable();
   }
 
   @Override
-  public String toString()
-  {
-    return "MAttribute "+valueAccessor.getAccessPath();
+  public String toString() {
+    return "MAttribute " + valueAccessor.getAccessPath();
   }
 
 }

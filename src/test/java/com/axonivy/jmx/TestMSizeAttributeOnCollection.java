@@ -17,29 +17,24 @@ import org.junit.Test;
 
 import com.axonivy.jmx.TestFieldBasedMAttribute.BaseTestBean;
 
-public class TestMSizeAttributeOnCollection extends BaseMTest<TestMSizeAttributeOnCollection.TestBean>
-{
+public class TestMSizeAttributeOnCollection extends BaseMTest<TestMSizeAttributeOnCollection.TestBean> {
   @MBean("Test:type=TestType")
-  public static class TestBean extends BaseTestBean
-  {
+  public static class TestBean extends BaseTestBean {
     @MSizeAttribute
-    private List<String> names=new ArrayList<String>();
-    
-    @MSizeAttribute(name="lastNames", description="last names")
-    private List<String> getNames()
-    {
+    private List<String> names = new ArrayList<>();
+
+    @MSizeAttribute(name = "lastNames", description = "last names")
+    private List<String> getNames() {
       return names;
     }
   }
 
-  public TestMSizeAttributeOnCollection() throws MalformedObjectNameException
-  {
+  public TestMSizeAttributeOnCollection() throws MalformedObjectNameException {
     super(new TestBean(), "Test:type=TestType");
   }
-  
+
   @Test
-  public void testAttributeInfoNames() throws IntrospectionException, InstanceNotFoundException, ReflectionException 
-  {
+  public void testAttributeInfoNames() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("names");
     assertThat(attributeInfo.getDescription()).isEqualTo("names");
     assertThat(attributeInfo.getType()).isEqualTo("java.lang.Integer");
@@ -47,10 +42,9 @@ public class TestMSizeAttributeOnCollection extends BaseMTest<TestMSizeAttribute
     assertThat(attributeInfo.isWritable()).isEqualTo(false);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
   }
-  
+
   @Test
-  public void testReadAttributeNames() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeNames() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.names.add("Weiss");
     assertThat(getAttribute("names")).isEqualTo(1);
     testBean.names.add("Buetler");
@@ -58,8 +52,7 @@ public class TestMSizeAttributeOnCollection extends BaseMTest<TestMSizeAttribute
   }
 
   @Test
-  public void testAttributeInfoLastNames() throws IntrospectionException, InstanceNotFoundException, ReflectionException 
-  {
+  public void testAttributeInfoLastNames() throws IntrospectionException, InstanceNotFoundException, ReflectionException {
     MBeanAttributeInfo attributeInfo = getAttributeInfo("lastNames");
     assertThat(attributeInfo.getDescription()).isEqualTo("last names");
     assertThat(attributeInfo.getType()).isEqualTo("java.lang.Integer");
@@ -67,20 +60,18 @@ public class TestMSizeAttributeOnCollection extends BaseMTest<TestMSizeAttribute
     assertThat(attributeInfo.isWritable()).isEqualTo(false);
     assertThat(attributeInfo.isIs()).isEqualTo(false);
   }
-  
+
   @Test
-  public void testReadAttributeLastNames() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
+  public void testReadAttributeLastNames() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
     testBean.names.add("Weiss");
     assertThat(getAttribute("lastNames")).isEqualTo(1);
     testBean.names.add("Buetler");
     assertThat(getAttribute("lastNames")).isEqualTo(2);
   }
-  
+
   @Test
-  public void testNullValue() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException
-  {
-    testBean.names=null;
+  public void testNullValue() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
+    testBean.names = null;
     assertThat(getAttribute("lastNames")).isEqualTo(0);
     assertThat(getAttribute("names")).isEqualTo(0);
   }

@@ -35,10 +35,9 @@ import java.lang.annotation.Target;
  * @since 28.06.2013
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.TYPE})
+@Target({ElementType.TYPE})
 @Inherited
-public @interface MComposite
-{
+public @interface MComposite {
   /**
    * Name of the type. If not defined the class name will be used a type name
    * @return type name

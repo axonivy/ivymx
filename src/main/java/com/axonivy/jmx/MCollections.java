@@ -13,18 +13,15 @@ import com.axonivy.jmx.internal.MMap;
  * @author rwei
  * @since 28.06.2013
  */
-public class MCollections
-{
+public class MCollections {
   /**
    * Converts the given list to a managed list. MBeans added are automatically register. MBeans removed are unregistered.
    * @param originalList list to convert to a managed list.
    * @param <T> list element type
    * @return managed list
    */
-  public static <T> List<T> managedList(List<T> originalList)
-  {
-    List<T> list = new MList<T>(originalList);
-    return list;
+  public static <T> List<T> managedList(List<T> originalList) {
+    return new MList<>(originalList);
   }
 
   /**
@@ -34,9 +31,7 @@ public class MCollections
    * @param <V> map value type
    * @return managed map
    */
-  public static <T, V> Map<T, V> managedMap(Map<T, V> originalMap)
-  {
-    Map<T, V> map = new MMap<T, V>(originalMap);
-    return map;
+  public static <T, V> Map<T, V> managedMap(Map<T, V> originalMap) {
+    return new MMap<>(originalMap);
   }
 }

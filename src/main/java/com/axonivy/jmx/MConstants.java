@@ -4,8 +4,7 @@ import com.axonivy.jmx.internal.IgnoreErrorStrategy;
 import com.axonivy.jmx.internal.LogErrorStrategy;
 import com.axonivy.jmx.internal.ThrowRuntimeExceptionErrorStrategy;
 
-public class MConstants
-{
+public class MConstants {
   /** Throws a runtime exception. This is the default strategy. If no other strategy is set this strategy is used */
   public static final IRegisterMBeanErrorStrategy THROW_RUNTIME_EXCEPTION_ERROR_STRATEGY = ThrowRuntimeExceptionErrorStrategy.INSTANCE;
   /** Logs the registration error */
