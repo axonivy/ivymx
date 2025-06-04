@@ -56,6 +56,11 @@ pipeline {
                 sh "git push origin --tags"
                 sh "git push -u origin ${targetBranch}"
               }
+              def message = "Prepare for next development cycle (${env.BRANCH_NAME})"
+              withCredentials([file(credentialsId: 'github-ivyteam-token-repo-manager', variable: 'tokenFile')]) {
+                sh "gh auth login --with-token < ${tokenFile}"
+                sh "gh pr create --title '${message}' --body '${message}' --head ${targetBranch} --base ${env.BRANCH_NAME}"
+              }
             }
           }
         }
