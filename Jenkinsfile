@@ -76,7 +76,7 @@ pipeline {
 }
 
 def version(def param) {
-  sh "mvn org.codehaus.mojo:versions-maven-plugin:2.18.0:set ${param} | grep '\\[.*' "
+  sh "mvn org.codehaus.mojo:versions-maven-plugin:2.18.0:set ${param} -DgenerateBackupPoms=false | grep '\\[.*' "
   def evalCmd='mvn help:evaluate -Dexpression=\'project.version\' -q -DforceStdout'
   def current = sh(script: evalCmd, returnStdout: true)
   return current;
