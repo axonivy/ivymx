@@ -37,7 +37,7 @@
     <skip.gpg>true</skip.gpg>
     <log4j.version>2.24.3</log4j.version>
     <slf4j.version>2.0.17</slf4j.version>
-    <autoRelease>true</autoRelease>
+    <autoRelease>false</autoRelease>
   </properties>
 
   <profiles>

@@ -23,6 +23,7 @@ pipeline {
         script {
           def targetBranch = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
           def officialRelease = params.deployProfile == 'maven.central.release';
+          def publishingUri = "https://central.sonatype.com/publishing/deployments"
           
           if (officialRelease) {
             sh "git config --global user.name 'ivy-team'"
@@ -41,10 +42,10 @@ pipeline {
             def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
             def mavenProps = "-Dgpg.passphrase='${env.GPG_PWD}' ";
             if (officialRelease) {
-              mavenProps += "-P ${params.deployProfile} -DautoRelease=false"
+              mavenProps += "-P ${params.deployProfile}"
             }
             maven cmd: "clean ${phase} ${mavenProps}"
-            currentBuild.description = "<a href='https://central.sonatype.com/publishing/deployments'>deployments</a>"
+            currentBuild.description = "<a href='${publishingUri}'>publishing</a>"
           }
           
           if (officialRelease) {
@@ -56,10 +57,11 @@ pipeline {
                 sh "git push origin --tags"
                 sh "git push -u origin ${targetBranch}"
               }
-              def message = "Prepare for next development cycle (${env.BRANCH_NAME})"
+              def title = "Prepare for next development cycle (${env.BRANCH_NAME})"
+              def message = ":warning: merge this PR only if you published the artifact on [CentralPortal](${publishingUri})"
               withCredentials([file(credentialsId: 'github-ivyteam-token-repo-manager', variable: 'tokenFile')]) {
                 sh "gh auth login --with-token < ${tokenFile}"
-                sh "gh pr create --title '${message}' --body '${message}' --head ${targetBranch} --base ${env.BRANCH_NAME}"
+                sh "gh pr create --title '${title}' --body '${message}' --head ${targetBranch} --base ${env.BRANCH_NAME}"
               }
             }
           }
