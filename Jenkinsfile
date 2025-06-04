@@ -40,10 +40,8 @@ pipeline {
           withCredentials([string(credentialsId: 'gpg.password.axonivy', variable: 'GPG_PWD'), file(credentialsId: 'gpg.keystore.axonivy', variable: 'GPG_FILE')]) {
             sh "gpg --batch --import ${env.GPG_FILE}"
             def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            def mavenProps = "-Dgpg.passphrase='${env.GPG_PWD}' ";
-            if (officialRelease) {
-              mavenProps += "-P ${params.deployProfile}"
-            }
+            def mavenProps = "-Dgpg.passphrase='${env.GPG_PWD}' " +
+                             "-P ${params.deployProfile} ";
             maven cmd: "clean ${phase} ${mavenProps}"
             currentBuild.description = "<a href='${publishingUri}'>publishing</a>"
           }
