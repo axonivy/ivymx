@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.axonivy</groupId>
   <artifactId>ivymx</artifactId>
-  <version>1.2.5-SNAPSHOT</version>
+  <version>1.2.5</version>
 
   <name>IVYMX - AXON IVY Java Management Extension</name>
   <description>Annotations and utility classes to register POJO's as JMX MBeans.</description>
