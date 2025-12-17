@@ -35,7 +35,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <skip.gpg>true</skip.gpg>
-    <log4j.version>2.25.2</log4j.version>
+    <log4j.version>2.25.3</log4j.version>
     <slf4j.version>2.0.17</slf4j.version>
     <autoRelease>false</autoRelease>
   </properties>
