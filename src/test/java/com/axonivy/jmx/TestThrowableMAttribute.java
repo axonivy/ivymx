@@ -12,7 +12,7 @@ import javax.management.ReflectionException;
 import javax.management.openmbean.CompositeData;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestThrowableMAttribute extends BaseMTest<TestThrowableMAttribute.TestBean> {
   @MBean("Test:type=TestType")

@@ -7,9 +7,9 @@ import javax.management.NotCompliantMBeanException;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.internal.LogErrorStrategy;
 import com.axonivy.jmx.util.LogTestAppender;
@@ -26,12 +26,12 @@ public class TestRegisterErrorStrategy {
 
   public static class NotCompatibleOpenType {}
 
-  @Before
+  @BeforeEach
   public void before() {
     Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
   }
 
-  @After
+  @AfterEach
   public void after() {
     MBeans.unregisterAllMBeans();
     MBeans.setRegisterMBeanErrorStrategy(MConstants.DEFAULT_ERROR_STRATEGY);

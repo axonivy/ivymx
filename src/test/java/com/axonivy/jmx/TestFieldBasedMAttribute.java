@@ -1,7 +1,7 @@
 package com.axonivy.jmx;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import javax.management.MBeanException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ReflectionException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestFieldBasedMAttribute extends BaseMTest<TestFieldBasedMAttribute.TestBean> {
   public static class BaseTestBean {
@@ -80,10 +80,9 @@ public class TestFieldBasedMAttribute extends BaseMTest<TestFieldBasedMAttribute
     assertThat(getAttribute("configName")).isEqualTo("ConfigString");
   }
 
-  @Test(expected = MBeanException.class)
+  @Test
   public void testWriteAttributeConfig() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException {
-    setAttribute("configName", "NewConfig");
-    fail("Should not work");
+    assertThatThrownBy(() -> setAttribute("configName", "NewConfig")).isInstanceOf(MBeanException.class);
   }
 
   @Test
@@ -103,10 +102,9 @@ public class TestFieldBasedMAttribute extends BaseMTest<TestFieldBasedMAttribute
     assertThat(getAttribute("isRunning")).isEqualTo(true);
   }
 
-  @Test(expected = MBeanException.class)
+  @Test
   public void testWriteAttributeIsRunning() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException {
-    setAttribute("isRunning", true);
-    fail("Should not work");
+    assertThatThrownBy(() -> setAttribute("isRunning", true)).isInstanceOf(MBeanException.class);
   }
 
   @Test
@@ -133,13 +131,13 @@ public class TestFieldBasedMAttribute extends BaseMTest<TestFieldBasedMAttribute
     assertThat(testBean.getCounter()).isEqualTo(38583);
   }
 
-  @Test(expected = AttributeNotFoundException.class)
+  @Test
   public void testWriteNonExistingAttribute() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException {
-    setAttribute("blah", "bluh");
+    assertThatThrownBy(() -> setAttribute("blah", "bluh")).isInstanceOf(AttributeNotFoundException.class);
   }
 
-  @Test(expected = AttributeNotFoundException.class)
+  @Test
   public void testReadNonExistingAttribute() throws AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException {
-    getAttribute("blah");
+    assertThatThrownBy(() -> getAttribute("blah")).isInstanceOf(AttributeNotFoundException.class);
   }
 }

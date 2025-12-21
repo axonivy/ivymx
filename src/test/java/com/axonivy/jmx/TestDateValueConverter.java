@@ -7,7 +7,7 @@ import java.util.Date;
 import javax.management.MalformedObjectNameException;
 import javax.management.openmbean.CompositeData;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestDateValueConverter extends BaseMTest<TestDateValueConverter.TestBean> {
   @MBean("Test:type=TestType")

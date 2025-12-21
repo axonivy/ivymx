@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MalformedObjectNameException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestMCache extends BaseMTest<TestMCache.TestBean> {
   @MBean("Test:type=TestType")

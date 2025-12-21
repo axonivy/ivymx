@@ -9,9 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.management.MalformedObjectNameException;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestMMapWithConcurrentHashMap extends BaseMTest<TestMMapWithConcurrentHashMap.TestBean> {
   private final Map<String, TestBean> testMap = MCollections.managedMap(new ConcurrentHashMap<String, TestBean>());
@@ -29,13 +29,13 @@ public class TestMMapWithConcurrentHashMap extends BaseMTest<TestMMapWithConcurr
   }
 
   @Override
-  @Before
+  @BeforeEach
   public void before() {
     MBeans.setRegisterMBeanErrorStrategy(MConstants.THROW_RUNTIME_EXCEPTION_ERROR_STRATEGY);
   }
 
   @Override
-  @After
+  @AfterEach
   public void after() {
     MBeans.setRegisterMBeanErrorStrategy(MConstants.DEFAULT_ERROR_STRATEGY);
     MBeans.unregisterAllMBeans();

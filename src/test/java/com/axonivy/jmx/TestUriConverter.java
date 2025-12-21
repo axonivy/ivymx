@@ -14,7 +14,7 @@ import javax.management.MBeanException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ReflectionException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestUriConverter extends BaseMTest<TestUriConverter.TestBean> {
   private static URI TEST_URI2;

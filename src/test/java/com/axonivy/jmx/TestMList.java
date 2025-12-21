@@ -7,8 +7,8 @@ import java.util.List;
 
 import javax.management.MalformedObjectNameException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestMList extends BaseMTest<TestMList.TestBean> {
   private final List<TestBean> testList = MCollections.managedList(new ArrayList<TestBean>());
@@ -27,7 +27,7 @@ public class TestMList extends BaseMTest<TestMList.TestBean> {
   }
 
   @Override
-  @Before
+  @BeforeEach
   public void before() {
     // do not register test bean
   }

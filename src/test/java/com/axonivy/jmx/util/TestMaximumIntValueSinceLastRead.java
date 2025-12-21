@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.management.MBeanAttributeInfo;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.BaseMTest;
 import com.axonivy.jmx.MBean;
