@@ -3,6 +3,8 @@ package com.axonivy.jmx.internal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.axonivy.jmx.MBean;
 
@@ -43,12 +45,9 @@ public class MMap<T, V> implements Map<T, V> {
    */
   @Override
   public V put(T key, V value) {
-    V previousValue = originalMap.put(key, value);
-    if (value != previousValue) {
-      manager.ifAnnotatedUnregisterMBeanFor(previousValue);
-      manager.ifAnnotatedRegisterMBeanFor(value);
-    }
-    return previousValue;
+    V oldValue = originalMap.put(key, value);
+    replaceMBean(oldValue, value);
+    return oldValue;
   }
 
   /**
@@ -136,5 +135,99 @@ public class MMap<T, V> implements Map<T, V> {
   @Override
   public Collection<V> values() {
     return originalMap.values();
+  }
+
+  @Override
+  public V computeIfAbsent(T key, Function<? super T, ? extends V> mappingFunction) {
+    V value = originalMap.computeIfAbsent(key, mappingFunction);
+    manager.ifAnnotatedRegisterMBeanFor(value);
+    return value;
+  }
+
+  @Override
+  public V computeIfPresent(T key, BiFunction<? super T, ? super V, ? extends V> remappingFunction) {
+    BiFunction<? super T, ? super V, ? extends V> fct = (k, oldValue) -> {
+      var newValue = remappingFunction.apply(k, oldValue);
+      if (newValue != oldValue && oldValue != null) {
+        manager.ifAnnotatedUnregisterMBeanFor(oldValue);
+      }
+      return newValue;
+    };
+    V value = originalMap.computeIfPresent(key, fct);
+    if (value != null) {
+      manager.ifAnnotatedRegisterMBeanFor(value);
+    } 
+    return value;
+  }
+
+  @Override
+  public V putIfAbsent(T key, V value) {
+    V oldValue = originalMap.putIfAbsent(key, value);
+    if (oldValue == null) {
+      if  (originalMap.get(key) == value) {
+        manager.ifAnnotatedRegisterMBeanFor(value);
+      }
+    } 
+    return oldValue;
+  }
+
+  @Override
+  public V replace(T key, V value) {
+    var oldValue = originalMap.replace(key, value);
+    if (oldValue != null) {
+      manager.ifAnnotatedUnregisterMBeanFor(oldValue);
+    }
+    if (value != null && originalMap.get(key) == value) {
+      manager.ifAnnotatedRegisterMBeanFor(value);
+    }
+    return oldValue;
+  }
+
+  @Override
+  public void replaceAll(BiFunction<? super T, ? super V, ? extends V> function) {
+    BiFunction<? super T, ? super V, ? extends V> fct = (key, oldValue) -> {
+      var newValue = function.apply(key, oldValue);
+      replaceMBean(oldValue, newValue);
+      return newValue;
+    };
+    originalMap.replaceAll(fct);
+  }
+
+  @Override
+  public V compute(T key, BiFunction<? super T, ? super V, ? extends V> remappingFunction) {
+    BiFunction<? super T, ? super V, ? extends V> fct = (k, oldValue) -> {
+      var newValue = remappingFunction.apply(key, oldValue);
+      replaceMBean(oldValue, newValue);
+      return newValue;
+    };
+    return originalMap.compute(key, fct);
+  }
+
+  @Override
+  public V merge(T key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+    BiFunction<? super V, ? super V, ? extends V> fct = (oldValue, newValue) -> {
+      var v = remappingFunction.apply(oldValue, newValue);
+      if (v != oldValue && oldValue != null) {
+        manager.ifAnnotatedUnregisterMBeanFor(oldValue);
+      }
+      return v;
+    };
+    var newValue = originalMap.merge(key, value, fct);
+    if (newValue != null && newValue == value) {
+      manager.ifAnnotatedRegisterMBeanFor(newValue);
+    }
+    return newValue;
+  }
+
+  private void replaceMBean(V oldValue, V newValue) {
+    if (oldValue == newValue) {
+      return;
+    }
+    if (oldValue != null) {
+      manager.ifAnnotatedUnregisterMBeanFor(oldValue);
+    }
+    if (newValue != null) {
+      manager.ifAnnotatedRegisterMBeanFor(newValue);
+    }
   }
 }
