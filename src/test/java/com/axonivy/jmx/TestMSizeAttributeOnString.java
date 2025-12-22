@@ -10,7 +10,7 @@ import javax.management.MBeanException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ReflectionException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.TestFieldBasedMAttribute.BaseTestBean;
 

@@ -17,9 +17,9 @@ import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public class BaseMTest<T> {
   protected T testBean;
@@ -30,12 +30,12 @@ public class BaseMTest<T> {
     this.testBeanObjectName = new ObjectName(testBeanObjectName);
   }
 
-  @After
+  @AfterEach
   public void after() {
     MBeans.unregisterAllMBeans();
   }
 
-  @Before
+  @BeforeEach
   public void before() {
     MBeans.registerMBeanFor(testBean);
   }
@@ -64,7 +64,7 @@ public class BaseMTest<T> {
         return info;
       }
     }
-    Assert.fail("Attribute info for attribute '" + attributeName + "' not found");
+    Assertions.fail("Attribute info for attribute '" + attributeName + "' not found");
     return null;
   }
 
@@ -74,7 +74,7 @@ public class BaseMTest<T> {
         return info;
       }
     }
-    Assert.fail("Operation info for operation '" + operationName + "' not found");
+    Assertions.fail("Operation info for operation '" + operationName + "' not found");
     return null;
   }
 

@@ -1,7 +1,7 @@
 package com.axonivy.jmx;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
@@ -14,9 +14,9 @@ import javax.management.ReflectionException;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.internal.LogErrorStrategy;
 import com.axonivy.jmx.util.LogTestAppender;
@@ -85,14 +85,14 @@ public class TestMethodBasedMAttribute extends BaseMTest<TestMethodBasedMAttribu
     }
   }
 
-  @Before
+  @BeforeEach
   @Override
   public void before() {
     super.before();
     Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
   }
 
-  @After
+  @AfterEach
   @Override
   public void after() {
     super.after();
@@ -121,10 +121,9 @@ public class TestMethodBasedMAttribute extends BaseMTest<TestMethodBasedMAttribu
     assertThat(getAttribute("running")).isEqualTo(true);
   }
 
-  @Test(expected = MBeanException.class)
+  @Test
   public void testWriteAttributeRunning() throws InstanceNotFoundException, InvalidAttributeValueException, AttributeNotFoundException, ReflectionException, MBeanException {
-    setAttribute("running", false);
-    fail("Should not work");
+    assertThatThrownBy(() -> setAttribute("running", false)).isInstanceOf(MBeanException.class);
   }
 
   @Test

@@ -1,6 +1,7 @@
 package com.axonivy.jmx;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
@@ -9,7 +10,7 @@ import javax.management.MBeanOperationInfo;
 import javax.management.MalformedObjectNameException;
 import javax.management.ReflectionException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.MOperation.Impact;
 
@@ -64,19 +65,19 @@ public class TestMOperation extends BaseMTest<TestMOperation.TestBean> {
     assertThat(invokeOperation("concat", new Object[] {"Hello", "World"}, new String[] {"java.lang.String", "java.lang.String"})).isEqualTo("HelloWorld");
   }
 
-  @Test(expected = ReflectionException.class)
+  @Test
   public void testInvokeArgsOperationWithWrongArgCount() throws InstanceNotFoundException, ReflectionException, MBeanException {
-    invokeOperation("concat", new Object[] {"Hello"}, new String[] {"java.lang.String"});
+    assertThatThrownBy(() -> invokeOperation("concat", new Object[] {"Hello"}, new String[] {"java.lang.String"})).isInstanceOf(ReflectionException.class);
   }
 
-  @Test(expected = ReflectionException.class)
+  @Test
   public void testInvokeArgsOperationWithWrongSignature() throws InstanceNotFoundException, ReflectionException, MBeanException {
-    invokeOperation("concat", new Object[] {"Hello", 123}, new String[] {"java.lang.String", "int"});
+    assertThatThrownBy(() -> invokeOperation("concat", new Object[] {"Hello", 123}, new String[] {"java.lang.String", "int"})).isInstanceOf(ReflectionException.class);
   }
 
-  @Test(expected = ReflectionException.class)
+  @Test
   public void testInvokeWithWrongOperationName() throws InstanceNotFoundException, ReflectionException, MBeanException {
-    invokeOperation("blah");
+    assertThatThrownBy(() -> invokeOperation("blah")).isInstanceOf(ReflectionException.class);
   }
 
   @Test

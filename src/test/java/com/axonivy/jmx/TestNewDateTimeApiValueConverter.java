@@ -21,7 +21,7 @@ import javax.management.ReflectionException;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.data.TemporalUnitOffset;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestNewDateTimeApiValueConverter extends BaseMTest<TestNewDateTimeApiValueConverter.TestBean> {
   private static final long DATE_ONE_MILLISECOND = 1L;

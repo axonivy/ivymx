@@ -19,7 +19,7 @@ import javax.management.openmbean.OpenMBeanAttributeInfo;
 import javax.management.openmbean.OpenType;
 import javax.management.openmbean.SimpleType;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.TestMBeans.BaseTestBean;
 

@@ -11,9 +11,9 @@ import java.util.function.Function;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestMMap extends BaseMTest<TestMMap.TestBean> {
   private final Map<String, TestBean> testMap = MCollections.managedMap(new HashMap<String, TestBean>());
@@ -37,13 +37,13 @@ public class TestMMap extends BaseMTest<TestMMap.TestBean> {
   }
 
   @Override
-  @Before
+  @BeforeEach
   public void before() {
     MBeans.setRegisterMBeanErrorStrategy(MConstants.THROW_RUNTIME_EXCEPTION_ERROR_STRATEGY);
   }
 
   @Override
-  @After
+  @AfterEach
   public void after() {
     MBeans.setRegisterMBeanErrorStrategy(MConstants.DEFAULT_ERROR_STRATEGY);
     MBeans.unregisterAllMBeans();

@@ -14,7 +14,7 @@ import javax.management.ReflectionException;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.internal.LogErrorStrategy;
 import com.axonivy.jmx.util.LogTestAppender;

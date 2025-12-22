@@ -17,9 +17,9 @@ import javax.management.openmbean.CompositeType;
 import javax.management.openmbean.OpenMBeanAttributeInfo;
 import javax.management.openmbean.OpenType;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.internal.MBeanManager;
 
@@ -61,7 +61,7 @@ public class TestIgnoreSyntheticMethods extends BaseMTest<TestIgnoreSyntheticMet
   }
 
   @Override
-  @Before
+  @BeforeEach
   public void before() {
     MBeanManager.getInstance().setRegisterMBeanErrorStrategy((mBean, error) -> errors.add(error));
     super.before();
@@ -88,7 +88,7 @@ public class TestIgnoreSyntheticMethods extends BaseMTest<TestIgnoreSyntheticMet
   }
 
   @Override
-  @After
+  @AfterEach
   public void after() {
     super.after();
     MBeanManager.getInstance().setRegisterMBeanErrorStrategy(MConstants.DEFAULT_ERROR_STRATEGY);

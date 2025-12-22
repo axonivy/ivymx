@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestMCompositionReference extends BaseMTest<TestMCompositionReference.TestBean> {
   @MBean(value = "Test:type=TestBean,name=#{name}")

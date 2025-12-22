@@ -11,8 +11,8 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestMBeanBasedMAttribute extends BaseMTest<TestMBeanBasedMAttribute.TestBean> {
   @MBean("Test:type=TestType")
@@ -29,7 +29,7 @@ public class TestMBeanBasedMAttribute extends BaseMTest<TestMBeanBasedMAttribute
   }
 
   @Override
-  @Before
+  @BeforeEach
   public void before() {
     super.before();
     MBeans.registerMBeanFor(embeddedBean);

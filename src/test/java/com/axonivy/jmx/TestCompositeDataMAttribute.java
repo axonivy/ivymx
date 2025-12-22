@@ -22,9 +22,9 @@ import javax.management.openmbean.SimpleType;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.TestMBeans.BaseTestBean;
 import com.axonivy.jmx.internal.LogErrorStrategy;
@@ -79,14 +79,14 @@ public class TestCompositeDataMAttribute extends BaseMTest<TestCompositeDataMAtt
     private RecursiveComposite recursiveItem;
   }
 
-  @Before
+  @BeforeEach
   @Override
   public void before() {
     super.before();
     Logger.getLogger(LogErrorStrategy.class).addAppender(logAppender);
   }
 
-  @After
+  @AfterEach
   @Override
   public void after() {
     super.after();

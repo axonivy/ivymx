@@ -2,7 +2,7 @@ package com.axonivy.jmx;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.axonivy.jmx.util.OperationExecutionCounter;
 import com.axonivy.jmx.util.OperationExecutionCounter.StopWatch;
