@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.0.0
+
+- Fix issue #169 computeIfAbsent does not work correctly with MMap and ConcurrentHashMap as original map
+
+Java 17 is required now
+JUnit 6 is used for testing
+
+Update dependencies:
+- Java to 17
+- JUnit to 6.0.1
+- Log4j2 to 2.25.3
+- Apache commons-lang to 3.20.0
+- JMockit to 1.50
+- AssertJ to 3.27.6
+
+## 1.2.5
+
+Add CODE_OF_CONDUCT.MD and SECURITY.MD file
+
+Update dependencies:
+- Log4j2 to 2.24.3
+- Slf4j to 2.0.17
+- AssertJ to 3.27.3
+- Apache commons-lang to 3.17.0
+
 ## 1.2.4
 
 Add method EventCounter#increase(long delta)
