@@ -1,6 +1,7 @@
 package com.axonivy.jmx.internal;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
@@ -33,6 +34,7 @@ class MBeanProxy implements DynamicMBean {
   private int uniqueId = 1;
   private List<MCompositionReferenceValue> compositionReferences;
   private MBeanInstanceInfo mBeanInstanceInfo;
+  private AtomicBoolean registered = new AtomicBoolean();
 
   MBeanProxy(MBeanType mBeanType, Object originalObject, ObjectName parentName) {
     this.mBeanType = mBeanType;
@@ -171,4 +173,7 @@ class MBeanProxy implements DynamicMBean {
     return mBeanInstanceInfo;
   }
 
+  public boolean register() {
+    return registered.compareAndSet(false, true);
+  }
 }

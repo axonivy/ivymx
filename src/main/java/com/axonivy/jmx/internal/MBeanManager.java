@@ -5,6 +5,8 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
@@ -57,15 +59,20 @@ public class MBeanManager {
 
   public void registerMBeanFor(Object object, ObjectName parentName) {
     try {
-      ensureMBeanProxyIsNotYetRegistered(object);
-      MBeanType mBeanType = getMBeanTypeFor(object);
-      MBeanProxy mBean = new MBeanProxy(mBeanType, object, parentName);
-      registerMBean(mBean);
-      registerMBeanProxy(object, mBean);
-      registerCompositionMBeans(mBean);
+      var mBean = registerMBeanProxy(object, obj -> createMBeanProxy(obj, parentName));
+      if (mBean.register()) {
+        registerMBean(mBean);
+        registerCompositionMBeans(mBean);
+      }
     } catch (Throwable error) {
+      unregisterMBeanProxy(object);
       registerErrorStrategy.errorRegisteringMBean(object, error);
     }
+  }
+
+  public MBeanProxy createMBeanProxy(Object object, ObjectName parentName) {
+    var mBeanType = getMBeanTypeFor(object);
+    return new MBeanProxy(mBeanType, object, parentName);
   }
 
   public void registerMBeansFor(Collection<? extends Object> objects) {
@@ -97,16 +104,8 @@ public class MBeanManager {
     getMBeanServer().registerMBean(mBean, name);
   }
 
-  private void ensureMBeanProxyIsNotYetRegistered(Object object) {
-    if (proxyRegistry.containsKey(object)) {
-      throw new IllegalArgumentException("MBean for parameter object is already registered");
-    }
-  }
-
-  private void registerMBeanProxy(Object object, MBeanProxy mBean) {
-    if (proxyRegistry.putIfAbsent(object, mBean) != null) {
-      throw new IllegalArgumentException("MBean for parameter object is already registered");
-    }
+  private MBeanProxy registerMBeanProxy(Object object, Function<Object, MBeanProxy> proxyFactory) {
+    return proxyRegistry.computeIfAbsent(object, proxyFactory);
   }
 
   void ifAnnotatedRegisterMBeanFor(Object object) {
