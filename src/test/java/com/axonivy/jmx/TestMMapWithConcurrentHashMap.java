@@ -42,7 +42,7 @@ public class TestMMapWithConcurrentHashMap extends BaseMTest<TestMMapWithConcurr
   }
 
   @Test
-  public void computeIfAbstent() throws InterruptedException {
+  public void computeIfAbsent() throws InterruptedException {
     var threads = new BeanCreator[8];
     for (int i = 0; i < threads.length; i++) {
       threads[i] = new BeanCreator();
@@ -67,6 +67,7 @@ public class TestMMapWithConcurrentHashMap extends BaseMTest<TestMMapWithConcurr
     private TestBean bean;
     private Throwable error;
     
+    @Override
     public void run() {
       try {
         bean = testMap.computeIfAbsent("blah", key -> new TestBean());

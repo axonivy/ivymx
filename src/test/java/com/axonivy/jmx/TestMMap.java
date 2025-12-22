@@ -209,7 +209,7 @@ public class TestMMap extends BaseMTest<TestMMap.TestBean> {
     var result = testMap.putIfAbsent("blah", testBean);
    
     assertRegistered();
-    assertThat(result).isNull();;
+    assertThat(result).isNull();
     assertThat(testMap.get("blah")).isSameAs(testBean);
   }
 
@@ -274,19 +274,19 @@ public class TestMMap extends BaseMTest<TestMMap.TestBean> {
   public void replace_old_with_new() throws MalformedObjectNameException {
     testMap.put("blah", testBean);
     assertRegistered();
-    var testBean2 = new HelloBean();
+    var newBean = new HelloBean();
    
-    var result = testMap.replace("blah", testBean2);
+    var result = testMap.replace("blah", newBean);
    
     assertNotRegistered();
     assertThat(MBeans.getMBeanServer().isRegistered(new ObjectName(HelloBean.TEST_NAME_HELLO))).isTrue();
     assertThat(result).isSameAs(testBean);
-    assertThat(testMap.get("blah")).isSameAs(testBean2);
+    assertThat(testMap.get("blah")).isSameAs(newBean);
   }
 
   @Test
   public void replaceAll() {
-      var methodWasCalled = new AtomicBoolean();
+    var methodWasCalled = new AtomicBoolean();
     var originalMap = new HashMap<String, TestBean>() {
       @Override
       public void replaceAll(BiFunction<? super String, ? super TestBean, ? extends TestBean> function) {
@@ -340,13 +340,13 @@ public class TestMMap extends BaseMTest<TestMMap.TestBean> {
   public void replaceAll_old_with_new() throws MalformedObjectNameException {
     testMap.put("blah", testBean);
     assertRegistered();
-    var testBean2 = new HelloBean();
+    var newBean = new HelloBean();
    
-    testMap.replace("blah", testBean2);
+    testMap.replace("blah", newBean);
    
     assertNotRegistered();
     assertThat(MBeans.getMBeanServer().isRegistered(new ObjectName(HelloBean.TEST_NAME_HELLO))).isTrue();
-    assertThat(testMap.get("blah")).isSameAs(testBean2);
+    assertThat(testMap.get("blah")).isSameAs(newBean);
   }
 
   @Test 
@@ -410,14 +410,14 @@ public class TestMMap extends BaseMTest<TestMMap.TestBean> {
   public void compute_old_with_new() throws MalformedObjectNameException {
     testMap.put("blah", testBean);
     assertRegistered();
-    var testBean2 = new HelloBean();
+    var newBean = new HelloBean();
    
-    var result = testMap.compute("blah", (key, oldValue) -> testBean2);
+    var result = testMap.compute("blah", (key, oldValue) -> newBean);
    
     assertNotRegistered();
     assertThat(MBeans.getMBeanServer().isRegistered(new ObjectName(HelloBean.TEST_NAME_HELLO))).isTrue();
-    assertThat(result).isSameAs(testBean2);
-    assertThat(testMap.get("blah")).isSameAs(testBean2);
+    assertThat(result).isSameAs(newBean);
+    assertThat(testMap.get("blah")).isSameAs(newBean);
   }
 
   @Test 
@@ -480,28 +480,43 @@ public class TestMMap extends BaseMTest<TestMMap.TestBean> {
   public void merge_old_with_new() throws MalformedObjectNameException {
     testMap.put("blah", testBean);
     assertRegistered();
-    var testBean2 = new HelloBean();
+    var newBean = new HelloBean();
    
-    var result = testMap.merge("blah", testBean2, (oldValue, newValue) -> newValue);
+    var result = testMap.merge("blah", newBean, (oldValue, newValue) -> newValue);
    
     assertNotRegistered();
     assertThat(MBeans.getMBeanServer().isRegistered(new ObjectName(HelloBean.TEST_NAME_HELLO))).isTrue();
-    assertThat(result).isSameAs(testBean2);
-    assertThat(testMap.get("blah")).isSameAs(testBean2);
+    assertThat(result).isSameAs(newBean);
+    assertThat(testMap.get("blah")).isSameAs(newBean);
   }
 
   @Test
   public void merge_old_with_old() throws MalformedObjectNameException {
     testMap.put("blah", testBean);
     assertRegistered();
-    var testBean2 = new HelloBean();
+    var newBean = new HelloBean();
    
-    var result = testMap.merge("blah", testBean2, (oldValue, newValue) -> oldValue);
+    var result = testMap.merge("blah", newBean, (oldValue, newValue) -> oldValue);
    
     assertRegistered();
     assertThat(MBeans.getMBeanServer().isRegistered(new ObjectName(HelloBean.TEST_NAME_HELLO))).isFalse();
     assertThat(result).isSameAs(testBean);
     assertThat(testMap.get("blah")).isSameAs(testBean);
+  }
+
+  @Test
+  public void merge_old_with_new_return_other() throws MalformedObjectNameException {
+    testMap.put("blah", testBean);
+    assertRegistered();
+    var otherBean = new HelloBean();
+    var newBean = new TestBean();
+   
+    var result = testMap.merge("blah", newBean, (oldValue, newValue) -> otherBean);
+   
+    assertNotRegistered();
+    assertThat(MBeans.getMBeanServer().isRegistered(new ObjectName(HelloBean.TEST_NAME_HELLO))).isTrue();
+    assertThat(result).isSameAs(otherBean);
+    assertThat(testMap.get("blah")).isSameAs(otherBean);
   }
 }
 

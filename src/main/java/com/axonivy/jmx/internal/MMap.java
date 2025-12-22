@@ -196,7 +196,7 @@ public class MMap<T, V> implements Map<T, V> {
   @Override
   public V compute(T key, BiFunction<? super T, ? super V, ? extends V> remappingFunction) {
     BiFunction<? super T, ? super V, ? extends V> fct = (k, oldValue) -> {
-      var newValue = remappingFunction.apply(key, oldValue);
+      var newValue = remappingFunction.apply(k, oldValue);
       replaceMBean(oldValue, newValue);
       return newValue;
     };
@@ -213,9 +213,7 @@ public class MMap<T, V> implements Map<T, V> {
       return v;
     };
     var newValue = originalMap.merge(key, value, fct);
-    if (newValue != null && newValue == value) {
-      manager.ifAnnotatedRegisterMBeanFor(newValue);
-    }
+    manager.ifAnnotatedRegisterMBeanFor(newValue);
     return newValue;
   }
 
