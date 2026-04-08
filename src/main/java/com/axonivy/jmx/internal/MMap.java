@@ -1,6 +1,7 @@
 package com.axonivy.jmx.internal;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -37,7 +38,7 @@ public class MMap<T, V> implements Map<T, V> {
    */
   @Override
   public Set<java.util.Map.Entry<T, V>> entrySet() {
-    return originalMap.entrySet();
+    return Collections.unmodifiableSet(originalMap.entrySet());
   }
 
   /**
@@ -126,7 +127,7 @@ public class MMap<T, V> implements Map<T, V> {
    */
   @Override
   public Set<T> keySet() {
-    return originalMap.keySet();
+    return Collections.unmodifiableSet(originalMap.keySet());
   }
 
   /**
@@ -134,7 +135,7 @@ public class MMap<T, V> implements Map<T, V> {
    */
   @Override
   public Collection<V> values() {
-    return originalMap.values();
+    return Collections.unmodifiableCollection(originalMap.values());
   }
 
   @Override

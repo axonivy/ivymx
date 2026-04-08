@@ -1,9 +1,12 @@
 package com.axonivy.jmx;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -517,6 +520,44 @@ public class TestMMap extends BaseMTest<TestMMap.TestBean> {
     assertThat(MBeans.getMBeanServer().isRegistered(new ObjectName(HelloBean.TEST_NAME_HELLO))).isTrue();
     assertThat(result).isSameAs(otherBean);
     assertThat(testMap.get("blah")).isSameAs(otherBean);
+  }
+
+  /** XIVY-18813 MMap#entrySet does not un/register MBeans correctly */
+  @Test 
+  public void entrySet_unmodifiable() {
+    testMap.put("blah", testBean);
+    assertRegistered();
+    assertThat(testMap.entrySet())
+        .extracting(e -> e.getKey())
+        .containsExactly("blah");
+    assertThat(testMap.entrySet())
+        .extracting(e -> e.getValue())
+        .containsExactly(testBean);
+
+    assertThatThrownBy(() -> testMap.entrySet().clear())
+        .isInstanceOf(UnsupportedOperationException.class);
+  }
+
+  /** XIVY-18813 MMap#keySet does not un/register MBeans correctly */
+  @Test
+  public void keySet_unmodifiable() {
+    testMap.put("blah", testBean);
+    assertRegistered();
+    assertThat(testMap.keySet()).containsExactly("blah");
+
+    assertThatThrownBy(() -> testMap.keySet().clear())
+        .isInstanceOf(UnsupportedOperationException.class);
+  }
+
+  /** XIVY-18813 MMap#values does not un/register MBeans correctly */
+  @Test
+  public void values_unmodifiable() {
+    testMap.put("blah", testBean);
+    assertRegistered();
+    assertThat(testMap.values()).containsExactly(testBean);
+
+    assertThatThrownBy(() -> testMap.values().clear())
+        .isInstanceOf(UnsupportedOperationException.class);
   }
 }
 
