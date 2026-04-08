@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.0.1
+
+- Fix issue #182 Return immutable set on MMap entrySet/values/keySet
+
+Update dependencies
+- JUnit to 6.0.3
+- Log4j2 to 2.25.4
+- AssertJ to 3.27.7
+- Maven to 3.9.14
+- Maven compiler plugin to 3.15.0
+- Central publishing plugin to 0.10.0
+
 ## 2.0.0
 
 - Fix issue #169 computeIfAbsent does not work correctly with MMap and ConcurrentHashMap as original map
