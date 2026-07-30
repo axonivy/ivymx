@@ -10,6 +10,7 @@ import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
+import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
 import org.apache.log4j.Level;
@@ -47,6 +48,20 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean> {
     @SuppressWarnings("unused")
     private String getName() {
       throw new IllegalStateException("Not allowed to call getName");
+    }
+  }
+
+  @MBean(value = "Test:type=TestNoneBeanConvention,name=#{name}")
+  public static class TestNoneBeanConvention {
+
+    private String hiddenName;
+
+    public void name(String name) {
+      this.hiddenName = name;
+    }
+
+    public String name() {
+      return hiddenName;
     }
   }
 
@@ -167,6 +182,15 @@ public class TestMBeans extends BaseMTest<TestMBeans.TestBean> {
     assertThat(logAppender.getRecording()).isEmpty();
     MBeans.registerMBeanFor(new Object());
     assertThat(logAppender.getRecording()).contains("Bean 'class java.lang.Object' must contain a @MBean annotation");
+  }
+
+  @Test
+  public void testNonBeanConvention() throws Exception {
+    var bean = new TestNoneBeanConvention();
+    bean.name("hans");
+    MBeans.registerMBeanFor(bean);
+    var info = MBeans.getMBeanServer().getMBeanInfo(new ObjectName("Test:type=TestNoneBeanConvention,name=hans"));
+    assertThat(info).isNotNull();
   }
 
   @Test
