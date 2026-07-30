@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.2
+
+- Support none-bean convention for method accessors
+
+Update dependencies:
+- JUnit to 6.1.1
+- Log4j2 to 2.26.1
+- Maven to 3.9.15
+- Central publishing plugin to 0.11.0
+
 ## 2.0.1
 
 - Fix issue #182 Return immutable set on MMap entrySet/values/keySet

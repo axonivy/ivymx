@@ -60,10 +60,10 @@ abstract class Instruction {
     private static final String START_TAG = "#{";
     private static final String END_TAG = "}";
 
-    private MBeanManager manager;
-    private Class<?> mBeanClass;
+    private final MBeanManager manager;
+    private final Class<?> mBeanClass;
     private String instruction;
-    private MainInstruction main = new MainInstruction();
+    private final MainInstruction main = new MainInstruction();
 
     public ElParser(MBeanManager manager, Class<?> mBeanClass, String instruction) {
       this.manager = manager;
@@ -130,14 +130,18 @@ abstract class Instruction {
       try {
         return createGetterMethodAccessor(previousResolver, currentClass, attribute);
       } catch (NoSuchMethodException ex) {
-        return createFieldAccessor(previousResolver, currentClass, attribute);
+        try {
+          return createMethodAccessor(previousResolver, currentClass, attribute);
+        } catch (NoSuchMethodException ex1) {
+          return createFieldAccessor(previousResolver, currentClass, attribute);
+        }
       }
     }
 
     private Pair<AbstractValueAccessor, Class<?>> createFieldAccessor(AbstractValueAccessor previousResolver, Class<?> currentClass, String attribute) throws IllegalArgumentException, SecurityException, NoSuchFieldException {
       try {
         Field field = currentClass.getDeclaredField(attribute);
-        return new ImmutablePair<AbstractValueAccessor, Class<?>>(new FieldBasedValueAccessor(previousResolver, field), field.getType());
+        return new ImmutablePair<>(new FieldBasedValueAccessor(previousResolver, field), field.getType());
       } catch (NoSuchFieldException ex) {
         if (currentClass.getSuperclass() == null) {
           throw ex;
@@ -150,7 +154,14 @@ abstract class Instruction {
         throws NoSuchMethodException {
       String methodName = "get" + StringUtils.capitalize(attribute);
       Method method = getMethod(currentClass, methodName);
-      return new ImmutablePair<AbstractValueAccessor, Class<?>>(new MethodBasedValueAccessor(manager, previousResolver, method), method.getReturnType());
+      return new ImmutablePair<>(new MethodBasedValueAccessor(manager, previousResolver, method), method.getReturnType());
+    }
+
+    private Pair<AbstractValueAccessor, Class<?>> createMethodAccessor(AbstractValueAccessor previousResolver, Class<?> currentClass, String attribute)
+        throws NoSuchMethodException {
+      String methodName = attribute;
+      Method method = getMethod(currentClass, methodName);
+      return new ImmutablePair<>(new MethodBasedValueAccessor(manager, previousResolver, method), method.getReturnType());
     }
 
     private static Method getMethod(Class<?> clazz, String methodName) throws NoSuchMethodException {
@@ -174,7 +185,7 @@ abstract class Instruction {
   }
 
   private static class MainInstruction extends Instruction {
-    private List<Instruction> instructions = new ArrayList<Instruction>();
+    private final List<Instruction> instructions = new ArrayList<>();
 
     @Override
     String execute(Object baseObject) {
@@ -187,7 +198,7 @@ abstract class Instruction {
   }
 
   private static class StringLiteralInstruction extends Instruction {
-    private String literal;
+    private final String literal;
 
     public StringLiteralInstruction(String literal) {
       this.literal = literal;
@@ -200,8 +211,8 @@ abstract class Instruction {
   }
 
   private static class ElExpression extends Instruction {
-    private AbstractValueAccessor valueAccessor;
-    private String instruction;
+    private final AbstractValueAccessor valueAccessor;
+    private final String instruction;
 
     private ElExpression(String instruction, AbstractValueAccessor valueAccessor) {
       this.instruction = instruction;
