@@ -1,5 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>axonivy/renovate-config"]
+  "extends": ["local>axonivy/renovate-config"],
+  "baseBranchPatterns": [
+    "master"
+  ]
 }
 
