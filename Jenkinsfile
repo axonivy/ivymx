@@ -14,7 +14,7 @@ pipeline {
   parameters {
     choice(name: 'deployProfile',
       description: 'Choose where the built plugin should be deployed to',
-      choices: ['central.snapshots', 'maven.central.release'])
+      choices: ['snapshot', 'release'])
   }
 
   stages {
@@ -22,8 +22,8 @@ pipeline {
       steps {
         script {
           def targetBranch = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
-          def officialRelease = params.deployProfile == 'maven.central.release';
-          def publishingUri = "https://central.sonatype.com/publishing/deployments"
+          def officialRelease = params.deployProfile == 'release';
+          def publishingUri = "https://nexus.axonivy.com/repository/maven-releases/"
           
           if (officialRelease) {
             sh "git config --global user.name 'ivy-team'"
@@ -40,10 +40,14 @@ pipeline {
           withCredentials([string(credentialsId: 'gpg.password.axonivy', variable: 'GPG_PWD'), file(credentialsId: 'gpg.keystore.axonivy', variable: 'GPG_FILE')]) {
             sh "gpg --batch --import ${env.GPG_FILE}"
             def phase = env.BRANCH_NAME == 'master' ? 'deploy' : 'verify'
-            def mavenProps = "-Dgpg.passphrase='${env.GPG_PWD}' " +
-                             "-P ${params.deployProfile} ";
+            def mavenProps = "-Dgpg.passphrase='${env.GPG_PWD}' "
+            if (officialRelease) {
+              mavenProps += "-Dskip.gpg=false "
+            }
             maven cmd: "clean ${phase} ${mavenProps}"
-            currentBuild.description = "<a href='${publishingUri}'>publishing</a>"
+            if (phase == 'deploy') {
+              currentBuild.description = "<a href='${publishingUri}'>publishing</a>"
+            }
           }
           
           if (officialRelease) {
@@ -56,7 +60,7 @@ pipeline {
                 sh "git push -u origin ${targetBranch}"
               }
               def title = "Prepare for next development cycle (${env.BRANCH_NAME})"
-              def message = ":warning: merge this PR only if you published the artifact on [CentralPortal](${publishingUri})"
+              def message = ":warning: merge this PR only if you verified the artifact is published on [Axon Ivy Nexus](${publishingUri})"
               withCredentials([file(credentialsId: 'github-ivyteam-token-repo-manager', variable: 'tokenFile')]) {
                 sh "gh auth login --with-token < ${tokenFile}"
                 sh "gh pr create --title '${title}' --body '${message}' --head ${targetBranch} --base ${env.BRANCH_NAME}"

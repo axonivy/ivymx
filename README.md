@@ -1,4 +1,4 @@
-[![ivymx version][ivymx]][ivymx-central]
+[![ivymx version][ivymx]][ivymx-nexus]
 
 # IVYMX - AXON IVY Java Management Extension
 
@@ -38,6 +38,13 @@ public class Person
 ## Maven
 
 ```xml
+<repositories>
+  <repository>
+    <id>nexus.axonivy.com</id>
+    <url>https://nexus.axonivy.com/repository/maven-releases/</url>
+  </repository>
+</repositories>
+
 <dependency>
   <groupId>com.axonivy</groupId>
   <artifactId>ivymx</artifactId>
@@ -55,6 +62,6 @@ public class Person
 
 The Apache License, Version 2.0
 
-[ivymx]: https://img.shields.io/maven-metadata/v.svg?label=ivymx&logo=apachemaven&metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Faxonivy%2Fivymx%2Fmaven-metadata.xml
-[ivymx-central]: https://repo1.maven.org/maven2/com/axonivy/ivymx/
+[ivymx]: https://img.shields.io/maven-metadata/v.svg?label=ivymx&logo=apachemaven&metadataUrl=https%3A%2F%2Fnexus.axonivy.com%2Frepository%2Fmaven-releases%2Fcom%2Faxonivy%2Fivymx%2Fmaven-metadata.xml
+[ivymx-nexus]: https://nexus.axonivy.com/repository/maven-releases/com/axonivy/ivymx/
 
