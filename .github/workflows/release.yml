@@ -1,0 +1,95 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      release:
+        type: boolean
+        default: false
+        description: Deploy a final release
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_BRANCH: release-${{ github.run_id }}-${{ github.run_attempt }}
+      PUBLISHING_URI: https://central.sonatype.com/publishing/deployments
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@v6
+        with:
+          java-version: 25
+          distribution: temurin
+          server-id: ${{ inputs.release && 'central.releases' || 'central.snapshots' }}
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Configure Git
+        run: |
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name "${{ github.actor }}"
+          git checkout -b "$RELEASE_BRANCH"
+
+      - name: Introduce final release version
+        if: inputs.release
+        id: release
+        run: |
+          mvn --batch-mode versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
+          releasedVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          git add pom.xml
+          git commit -m "update versions for release ${releasedVersion}"
+          git tag "v${releasedVersion}" -a -m "Official release ${releasedVersion}"
+          echo "version=$releasedVersion" >> "$GITHUB_OUTPUT"
+          echo "tag=v${releasedVersion}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish package
+        env:
+          MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_ARGS: ${{ inputs.release && '-PcentralDeploy' || '' }}
+        run: |
+          mvn --batch-mode clean deploy
+
+      - name: Prepare next development cycle
+        if: inputs.release
+        env:
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          mvn --batch-mode versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
+          nextVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          git add pom.xml
+          git commit -m "prepare next dev-cycle ${nextVersion}"
+          git push --atomic origin "refs/tags/v${RELEASE_VERSION}" "$RELEASE_BRANCH"
+
+      - name: Create pull request
+        if: inputs.release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "Prepare for next development cycle" \
+            --body ":warning: merge this PR only if you published the artifact on [CentralPortal](${PUBLISHING_URI})" \
+            --head "$RELEASE_BRANCH"
+
+  publish_release_draft:
+    if: inputs.release
+    needs: deploy
+    permissions:
+      contents: write
+      pull-requests: read
+    uses: ./.github/workflows/publish-release-drafter.yml
+    with:
+      tag: ${{ needs.deploy.outputs.tag }}

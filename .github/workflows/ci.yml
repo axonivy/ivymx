@@ -1,0 +1,38 @@
+name: CI-Build
+
+on:
+  push:
+  schedule:
+    - cron: "21 21 * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      checks: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: 25
+          distribution: temurin
+
+      - name: Build with Maven
+        run: mvn --batch-mode clean verify
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: "**/target/surefire-reports/**/*.xml"
+
+      - name: Archive build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: "**/target/*.jar"
+          if-no-files-found: error
