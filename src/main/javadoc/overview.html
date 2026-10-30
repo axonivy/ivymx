@@ -1,12 +1,15 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-  <HEAD>
-    <TITLE>API Overview</TITLE>
-  </HEAD>
-  <BODY>
-    Annotations and utility classes to register POJO's as JMX {@link com.axonivy.jmx.MBean MBeans}. To start have a look at the class {@link com.axonivy.jmx.MBeans} and the annotation {@link com.axonivy.jmx.MBean}.
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+  <head>
+    <title>API Overview</title>
+  </head>
+  <body>
+    Annotations and utility classes to register POJO's as JMX {@link
+    io.github.axonivy.jmx.MBean MBeans}. To start have a look at the class
+    {@link io.github.axonivy.jmx.MBeans} and the annotation {@link
+    io.github.axonivy.jmx.MBean}.
     <p>Simple Example:</p>
- 	<PRE>
+    <pre>
  {@code @MBean}("GettingStarted:name=Person")
  public class Person
  {
@@ -16,6 +19,6 @@
      MBeans.registerMBeanFor(person);
    }
  }
-    </PRE>
-  </BODY>
-</HTML>
+    </pre>
+  </body>
+</html>
