@@ -1,8 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.axonivy</groupId>
+  <groupId>io.github.axonivy</groupId>
   <artifactId>ivymx</artifactId>
-  <version>2.0.3-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 
   <name>IVYMX - AXON IVY Java Management Extension</name>
   <description>Annotations and utility classes to register POJO's as JMX MBeans.</description>
@@ -40,29 +42,23 @@
     <autoRelease>false</autoRelease>
   </properties>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <id>central.snapshots</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+    </snapshotRepository>
+    <repository>
+      <id>central.releases</id>
+      <url>https://oss.sonatype.org/content/repositories/releases/</url>
+    </repository>
+  </distributionManagement>
+
   <profiles>
     <profile>
-      <id>central.snapshots</id>
-      <distributionManagement>
-        <snapshotRepository>
-          <id>central.snapshots</id>
-          <name>Maven Central Snapshots Repo</name>
-          <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-        </snapshotRepository>
-      </distributionManagement>
-    </profile>
-    <profile>
-      <id>maven.central.release</id>
+      <id>centralDeploy</id>
       <properties>
         <skip.gpg>false</skip.gpg>
       </properties>
-      <distributionManagement>
-        <repository>
-          <id>central.releases</id>
-          <name>Maven Central Releases Repo</name>
-          <url>https://oss.sonatype.org/content/repositories/releases/</url>
-        </repository>
-      </distributionManagement>
       <build>
         <plugins>
           <plugin>
@@ -164,7 +160,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.12.0</version>
         <configuration>
-          <excludePackageNames>com.axonivy.jmx.internal</excludePackageNames>
+          <excludePackageNames>io.github.axonivy.jmx.internal</excludePackageNames>
         </configuration>
         <executions>
           <execution>
@@ -231,7 +227,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.12.0</version>
         <configuration>
-          <excludePackageNames>com.axonivy.jmx.internal</excludePackageNames>
+          <excludePackageNames>io.github.axonivy.jmx.internal</excludePackageNames>
         </configuration>
         <reportSets>
           <reportSet>

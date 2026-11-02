@@ -1,0 +1,45 @@
+name-template: v$RESOLVED_VERSION 🧪
+tag-template: v$RESOLVED_VERSION
+filter-by-commitish: true
+categories:
+  - title: 🚀 Features
+    when:
+      labels:
+        - feature
+        - enhancement
+  - title: 🐛 Bug Fixes
+    when:
+      labels:
+        - fix
+        - bugfix
+        - bug
+  - title: 📦 Dependencies
+    when:
+      label: dependencies
+  - title: ⚠️ Changes
+    when:
+      label: deprecated
+  - title: 📄 Documentation
+    when:
+      labels:
+        - docs
+        - documentation
+  - type: pre-exclude
+    when:
+      label: skip-changelog
+  - type: version-resolver
+    semver-increment: major
+    when:
+      label: major
+  - type: version-resolver
+    semver-increment: minor
+    when:
+      label: minor
+  - type: version-resolver
+    semver-increment: patch
+change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
+change-title-escapes: \<*_&
+template: |
+  ## Changes
+
+  $CHANGES
