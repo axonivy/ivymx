@@ -81,8 +81,10 @@ jobs:
         run: |
           gh pr create \
             --title "Prepare for next development cycle" \
-            --body ":warning: merge this PR only if you published the artifact on [CentralPortal](${PUBLISHING_URI})" \
-            --head "$RELEASE_BRANCH"
+            --body "Release artifacts have been published on [Central Portal](${PUBLISHING_URI})." \
+            --head "$RELEASE_BRANCH" \
+            --assignee "${{ github.actor }}" \
+            --label skip-changelog
 
   publish_release_draft:
     if: inputs.release
