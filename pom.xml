@@ -21,6 +21,15 @@
       <organizationUrl>https://www.axonivy.com</organizationUrl>
     </developer>
   </developers>
+  <scm>
+    <url>https://github.com/axonivy/ivymx</url>
+    <connection>scm:git:https://github.com/axonivy/ivymx.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/axonivy/ivymx.git</developerConnection>
+  </scm>
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/axonivy/ivymx/issues</url>
+  </issueManagement>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -28,18 +37,11 @@
     </license>
   </licenses>
 
-  <scm>
-    <url>git@github.com:axonivy/ivymx.git</url>
-    <connection>scm:git:git@github.com:axonivy/ivymx.git</connection>
-    <developerConnection>scm:git:git@github.com:axonivy/ivymx.git</developerConnection>
-  </scm>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <skip.gpg>true</skip.gpg>
     <log4j.version>2.26.1</log4j.version>
     <slf4j.version>2.0.20</slf4j.version>
-    <autoRelease>false</autoRelease>
   </properties>
 
   <distributionManagement>
@@ -68,7 +70,8 @@
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central.releases</publishingServerId>
-              <autoPublish>${autoRelease}</autoPublish>
+              <autoPublish>true</autoPublish>
+              <waitMaxTime>7200</waitMaxTime>
               <waitUntil>published</waitUntil>
               <forcedStagingDirectory>${project.build.directory}/central-stage</forcedStagingDirectory>
             </configuration>
@@ -150,7 +153,7 @@
           <execution>
             <id>attach-sources</id>
             <goals>
-              <goal>jar</goal>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>

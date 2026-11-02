@@ -1,8 +1,9 @@
+# IVYMX - AXON IVY Java Management Extension
+
 [![ivymx version][ivymx]][ivymx-central]
+[![CI-Build][ci-build]][ci-build-workflow]
 
 [![ivymx 2.x version][ivymx-2x]][ivymx-2x-central]
-
-# IVYMX - AXON IVY Java Management Extension
 
 ## Introduction
 
@@ -34,8 +35,8 @@ public class Person
 
 ## Documentation
 
-- [Getting Started](http://axonivy.github.io/ivymx/GettingStarted.html)
-- [JavaDoc](http://axonivy.github.io/ivymx/apidocs/index.html)
+- [Getting Started][getting-started]
+- [JavaDoc][javadoc]
 
 ## Maven
 
@@ -72,7 +73,7 @@ To resolve snapshots, add the Maven Central snapshot repository:
 
 ### Older Releases
 
-Stable 2.x and earlier releases remain available under [`com.axonivy:ivymx`](https://central.sonatype.com/artifact/com.axonivy/ivymx/) and use Java packages in the `com.axonivy` namespace. The latest stable release is:
+Stable 2.x and earlier releases remain available under [`com.axonivy:ivymx`][ivymx-2x-central] and use Java packages in the `com.axonivy` namespace. The latest stable release is:
 
 ```xml
 <dependency>
@@ -84,9 +85,9 @@ Stable 2.x and earlier releases remain available under [`com.axonivy:ivymx`](htt
 
 ## Authors
 
-[ivyTeam](https://developer.axonivy.com/)
+[ivyTeam][ivyteam]
 
-[![Axon Ivy](https://www.axonivy.com/hubfs/brand/axonivy-logo-black.svg)](http://www.axonivy.com)
+[![Axon Ivy][axonivy-logo]][axonivy-site]
 
 ## License
 
@@ -96,3 +97,10 @@ The Apache License, Version 2.0
 [ivymx-central]: https://central.sonatype.com/artifact/io.github.axonivy/ivymx/
 [ivymx-2x]: https://img.shields.io/maven-central/v/com.axonivy/ivymx.svg?label=ivymx%202.x&logo=apachemaven
 [ivymx-2x-central]: https://central.sonatype.com/artifact/com.axonivy/ivymx/
+[ci-build]: https://github.com/axonivy/ivymx/actions/workflows/ci.yml/badge.svg
+[ci-build-workflow]: https://github.com/axonivy/ivymx/actions/workflows/ci.yml
+[getting-started]: http://axonivy.github.io/ivymx/GettingStarted.html
+[javadoc]: http://axonivy.github.io/ivymx/apidocs/index.html
+[ivyteam]: https://developer.axonivy.com/
+[axonivy-logo]: https://www.axonivy.com/hubfs/brand/axonivy-logo-black.svg
+[axonivy-site]: http://www.axonivy.com
