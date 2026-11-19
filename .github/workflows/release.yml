@@ -68,6 +68,7 @@ jobs:
         env:
           RELEASE_VERSION: ${{ steps.release.outputs.version }}
         run: |
+          git reset --hard HEAD~1
           mvn --batch-mode versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
           nextVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           git add pom.xml
